@@ -1,19 +1,18 @@
 // Hooks
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { signup } from './../redux/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import toast, { Toaster } from 'react-hot-toast';
 // Packages
 // import toast, { Toaster } from 'react-hot-toast';
 // Utils
 
 const Register = () => {
-  const initialErrorsObj = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
-    passwordConfirm: '',
-  };
-
+  const { error, status } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
@@ -22,82 +21,42 @@ const Register = () => {
   const [bio, setBio] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [picture, setPicture] = useState('');
-  const [errors, setErrors] = useState(initialErrorsObj);
 
-  const emptyFields = () => {
-    setFirstname('');
-    setLastname('');
-    setEmail('');
-    setPassword('');
-    setPasswordConfirm('');
-    setBio('');
-    setBirthdate('');
-    setPicture('');
-  };
-
-  const handleErrors = () => {
-    if (firstname === '') {
-      setErrors({ ...errors, firstname: 'Please provide firstname.' });
-    } else {
-      setErrors({ ...errors, firstname: '' });
-    }
-
-    if (lastname === '') {
-      setErrors({ ...errors, lastname: 'Please provide lastname.' });
-    } else {
-      setErrors({ ...errors, lastname: '' });
-    }
-
-    if (email === '') {
-      setErrors({ ...errors, email: 'Please provide email.' });
-    } else {
-      setErrors({ ...errors, email: '' });
-    }
-
-    if (password === '') {
-      setErrors({ ...errors, password: 'Please provide password.' });
-    } else {
-      setErrors({ ...errors, password: '' });
-    }
-
-    if (passwordConfirm === '') {
-      setErrors({
-        ...errors,
-        passwordConfirm: 'Please provide password confirm.',
-      });
-    } else {
-      setErrors({ ...errors, passwordConfirm: '' });
-    }
-  };
-
-  const { signup, isLoading, error } = {};
+  // const emptyFields = () => {
+  //   setFirstname('');
+  //   setLastname('');
+  //   setEmail('');
+  //   setPassword('');
+  //   setPasswordConfirm('');
+  //   setBio('');
+  //   setBirthdate('');
+  //   setPicture('');
+  // };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    handleErrors();
-    if (firstname && lastname && email && password && passwordConfirm) {
-      await signup(
-        firstname,
-        lastname,
-        email,
-        password,
-        passwordConfirm,
-        bio,
-        birthdate
-      );
-      if (!error) {
-        // toast.success('User created successfully');
-        emptyFields();
-      } else {
-        // toast.error(error.response?.data.message);
-        // console.log(error);
-      }
-    }
+    // if (firstname && lastname && email && password && passwordConfirm) {
+    dispatch(signup({ firstname, lastname, email, password, passwordConfirm }));
+    // }
   };
+
+  useEffect(() => {
+    if (Cookies.get('jwt') !== undefined) {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (status === 'failed') {
+      toast.error(error); // Assuming you have a toast.error method for displaying errors
+    } else if (status === 'success') {
+      navigate('/');
+    }
+  }, [status, error, navigate]);
 
   return (
     <section className="flex flex-col container px-5 py-6 my-12 min-h-[80vh] overflow-hidden rounded-3xl mx-auto max-w-[80vw] bg-gray-200">
-      {/* <Toaster /> */}
+      <Toaster />
       <h1 className="text-3xl font-bold text-center mb-2">DARK SPACE</h1>
       <p className="text-center">Dark Sapce Social Media Application</p>
       <form
@@ -113,9 +72,6 @@ const Register = () => {
             placeholder="firstname"
             name="firstname"
           />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {errors.firstname}
-          </span>
         </div>
         <div className="flex justify-between relative pb-5">
           <label>Lastname</label>
@@ -126,9 +82,6 @@ const Register = () => {
             placeholder="lastname"
             name="lastname"
           />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {errors.lastname}
-          </span>
         </div>
         <div className="flex justify-between relative pb-5">
           <label htmlFor="email">Email</label>
@@ -139,9 +92,6 @@ const Register = () => {
             placeholder="email"
             name="email"
           />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {errors.email}
-          </span>
         </div>
         <div className="flex justify-between relative pb-5">
           <label htmlFor="passsword">Passsword</label>
@@ -152,9 +102,6 @@ const Register = () => {
             placeholder="passsword"
             name="passsword"
           />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {errors.password}
-          </span>
         </div>
         <div className="flex justify-between relative pb-5">
           <label htmlFor="passswordConfirm">Passsword Confirm</label>
@@ -165,9 +112,6 @@ const Register = () => {
             placeholder="Passsword Confirm"
             name="passsword_confirm"
           />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {errors.passwordConfirm}
-          </span>
         </div>
         <label>Bio</label>
         <textarea
@@ -194,7 +138,7 @@ const Register = () => {
         <button
           type="submit"
           className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"
-          disabled={isLoading}
+          disabled={status === 'loading'}
         >
           Sign Up
         </button>

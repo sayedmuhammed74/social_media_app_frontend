@@ -7,12 +7,12 @@ import { useEffect } from 'react';
 // reducres
 import { fetchPosts } from '../../redux/features/postsSlice';
 
-const Posts = () => {
+const Posts = ({ user }) => {
   const { posts, status, error } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
+    dispatch(fetchPosts({ user }));
+  }, [dispatch, user]);
 
   if (status === 'loading') {
     return <div>Loading...</div>;

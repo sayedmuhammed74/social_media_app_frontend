@@ -4,47 +4,96 @@ import Story from './StoryCard';
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Toaster } from 'react-hot-toast';
+// Hooks
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { fetchStories } from '../../redux/features/storiesSlice';
+import { useEffect, useRef, useState } from 'react';
+import { createStory, fetchStories } from '../../redux/features/storiesSlice';
 
 const Stories = () => {
-  const { stories, status, error } = useSelector((state) => state.stories);
+  const { stories, error } = useSelector((state) => state.stories);
   const dispatch = useDispatch();
+  const [image, setImage] = useState('');
+  const [text, setText] = useState('');
+  const addStoryBox = useRef(null);
+  const handleAddStoryBox = () => {
+    addStoryBox.current.classList.remove('hidden');
+    addStoryBox.current.classList.add('flex');
+  };
+
+  const handleAddStory = () => {
+    if (image || text) {
+      dispatch(createStory({ image, text }));
+      setTimeout(() => {
+        if (!error) {
+          addStoryBox.current.classList.add('hidden');
+          addStoryBox.current.classList.remove('flex');
+        }
+      }, 500);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchStories());
   }, [dispatch]);
 
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
-  if (status === 'faild') {
-    return <div>Error: {error}</div>;
-  }
+  // useEffect(() => {
+  //   if (status === 'loading') {
+  //     taost.loading('loading');
+  //   }
+  // }, [status]);
 
   return (
-    <div className="text-sm flex justify-start gap-3 overflow-hidden py-3 shadow-md rounded-md mb-3 border-r-8 border-l-8 border-white bg-white">
-      {/* Add Story */}
-      <div className="relative overflow-hidden rounded-md h-[140px] min-w-[90px]">
-        <img
-          className="w-full h-full absolute top-0 left-0 hover:scale-105 transition-all"
-          src="./imgs/story-cover.jpg"
-          alt=""
-        />
-        <FontAwesomeIcon
-          icon={faPlus}
-          className=" absolute bottom-7 left-8 border-2 p-1 opacity-90 hover:opacity-100 rounded-full border-primary text-primary bg-white"
-        />
-        <span className="absolute bottom-1.5 left-4 text-center z-10 font-light text-white">
+    <>
+      <Toaster />
+      <div
+        className="gap-4 items-center justify-center flex-col absolute z-50 h-[350px] w-[400px] p-3 bg-green-400 rounded-md opacity-70 hidden"
+        ref={addStoryBox}
+      >
+        <div>
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2 justify-center items-center">
+          <input
+            type="file"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+          />
+        </div>
+        <button
+          onClick={handleAddStory}
+          className="px-3 py-2 rounded-sm font-medium text-white bg-primary"
+        >
           Add Story
-        </span>
+        </button>
       </div>
-      {/* Stories */}
-      {stories.map((story) => (
-        <Story key={story._id} story={story} />
-      ))}
-    </div>
+      <div className="text-sm flex justify-start gap-3 overflow-x-scroll py-3 shadow-md rounded-md mb-3 border-r-8 border-l-8 border-white bg-white">
+        {/* Add Story */}
+        <div className="relative overflow-hidden rounded-md h-[140px] min-w-[90px]">
+          <img
+            className="w-full h-full absolute top-0 left-0 hover:scale-105 transition-all"
+            src="./imgs/story-cover.jpg"
+            alt=""
+          />
+          <FontAwesomeIcon
+            icon={faPlus}
+            className=" absolute bottom-7 left-8 border-2 p-1 opacity-90 hover:opacity-75 cursor-pointer rounded-full border-primary text-primary bg-white"
+            onClick={handleAddStoryBox}
+          />
+          <span className="absolute bottom-1.5 left-4 text-center z-10 font-light text-white">
+            Add Story
+          </span>
+        </div>
+        {/* Stories */}
+        {stories.map((story) => (
+          <Story key={story._id} story={story} />
+        ))}
+      </div>
+    </>
   );
 };
 

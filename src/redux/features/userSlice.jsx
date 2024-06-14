@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
+// Login
 export const login = createAsyncThunk(
   'user/login',
   async ({ email, password }) => {
@@ -30,8 +31,43 @@ export const login = createAsyncThunk(
   }
 );
 
+// Signup
+export const signup = createAsyncThunk(
+  'user/signup',
+  async ({ firstname, lastname, email, password, passwordConfirm }) => {
+    const res = await fetch('http://localhost:8000/api/v1/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'Application/json',
+      },
+      body: JSON.stringify({
+        firstname,
+        lastname,
+        email,
+        password,
+        passwordConfirm,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw new Error(json.message);
+    }
+
+    // set token to cookies
+    Cookies.set('jwt', json.token);
+    console.log('success', json);
+    // set user to local storage
+    localStorage.setItem('user', JSON.stringify(json.data.user));
+    return json;
+  }
+);
+
+// check if user exist in local host
 const user = JSON.parse(localStorage.getItem('user')) || {};
 
+// User Slice
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -50,6 +86,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Login builders
       .addCase(login.pending, (state) => {
         state.status = 'loading';
       })
@@ -58,6 +95,18 @@ const userSlice = createSlice({
         state.status = 'success';
       })
       .addCase(login.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      // Signup builders
+      .addCase(signup.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(signup.fulfilled, (state, action) => {
+        state.user = action.payload.data.user;
+        state.status = 'success';
+      })
+      .addCase(signup.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

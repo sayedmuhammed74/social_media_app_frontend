@@ -24,7 +24,7 @@ const PostCard = ({ post }) => {
       <div className="flex justify-between p-3">
         <div className="flex gap-2">
           <img
-            src={post.user.picture} // Assuming profilePicture is the property for user's profile picture
+            src={post?.user.picture} // Assuming profilePicture is the property for user's profile picture
             className="rounded-md"
             width={30}
             height={30}
@@ -32,7 +32,7 @@ const PostCard = ({ post }) => {
           />
           <div className="flex flex-col items-stretch">
             <span className="text-sm font-medium text-slate-800">
-              {post.user.firstname} {post.user.lastname}
+              {post?.user.firstname} {post?.user.lastname}
             </span>
             <span className="flex gap-1 font-extralight text-gray-400">
               {seconds > 0 && <span>{seconds}s</span>}
@@ -45,8 +45,10 @@ const PostCard = ({ post }) => {
         <FontAwesomeIcon icon={faEllipsis} className="cursor-pointer" />
       </div>
       <div className="px-3 overflow-hidden">
-        <p className={showMoreText ? '' : 'line-clamp-3'}>{post.description}</p>
-        {post.description.length > 100 && (
+        <p className={showMoreText ? '' : 'line-clamp-3'}>
+          {post?.description}
+        </p>
+        {post?.description.length > 100 && (
           <span className="text-blue-500 cursor-pointer" onClick={toggleText}>
             {showMoreText ? ' Show less' : ' Read more'}
           </span>

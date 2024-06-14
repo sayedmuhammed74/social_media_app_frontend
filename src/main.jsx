@@ -1,10 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import './index.css';
 
 // redux
@@ -17,14 +13,17 @@ import PageNotFound from './pages/PageNotFound.jsx';
 import Counter from './components/Counter.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import Cookies from 'js-cookie';
 import ProfilePage from './pages/ProfilePage.jsx';
-import Navbar from './components/Navbar.jsx';
+import Layout from './pages/Layout.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <Layout>
+        <App />,
+      </Layout>
+    ),
   },
   {
     path: '/counter',
@@ -36,14 +35,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/register',
-    element: !Cookies.get('jwt') ? <Register /> : <Navigate to="/" />,
+    element: <Register />,
   },
   {
-    path: '/profile',
+    path: '/profile/:slug',
     element: (
       <>
-        <Navbar />
-        <ProfilePage />
+        <Layout>
+          <ProfilePage />
+        </Layout>
       </>
     ),
   },

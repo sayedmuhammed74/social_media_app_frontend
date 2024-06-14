@@ -2,7 +2,6 @@
 // import Counter from './components/Counter';
 import { useEffect } from 'react';
 import Contacts from './components/Contacts/Contacts';
-import Navbar from './components/Navbar';
 import Posts from './components/Posts/Posts';
 import Requests from './components/Requests/Requests';
 import Sidebar from './components/Sidebar';
@@ -19,7 +18,6 @@ function App() {
   }, [navigate]);
   return (
     <>
-      <Navbar />
       <div className="flex gap-5">
         {/* left */}
         <section className="w-1/4">
@@ -30,7 +28,7 @@ function App() {
         {/* middle */}
         <section className="w-1/2">
           <Stories />
-          <Posts />
+          <Posts user="" />
         </section>
 
         {/* right */}

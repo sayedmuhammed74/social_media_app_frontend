@@ -27,7 +27,7 @@ const Sidebar = () => {
         </li>
         <li className="flex items-center gap-2 py-4 px-4 relative border-l-4 border-white transition-all cursor-pointer  cursor-pointer  hover:border-primary">
           <FontAwesomeIcon icon={faUsers} className="text-gray-500" />
-          <span className="font-medium text-gray-500">People</span>
+          <span className="font-medium text-gray-500">Friends</span>
           <span className="absolute right-2 rounded-full text-sm w-4 h-4 flex justify-center items-center text-white bg-primary">
             2
           </span>
