@@ -65,32 +65,22 @@ const Login = () => {
         className="mx-auto mt-3 flex flex-col justify-center gap-3"
         onSubmit={handleLogin}
       >
-        <div className="flex justify-between relative pb-5">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="email"
-            name="email"
-          />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {/* {errors.email} */}
-          </span>
-        </div>
-        <div className="flex justify-between relative pb-5">
-          <label htmlFor="passsword">Passsword</label>
-          <input
-            type="passsword"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="passsword"
-            name="passsword"
-          />
-          <span className="text-red-400 text-center absolute bottom-0">
-            {/* {errors.password} */}
-          </span>
-        </div>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
+          name="email"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+        />
+        <input
+          type="passsword"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="passsword"
+          name="passsword"
+        />
         <button
           type="submit"
           className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"
