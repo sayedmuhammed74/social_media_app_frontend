@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { url } from './../../url';
 
 export const fetchStories = createAsyncThunk(
   'stories/fetchStories',
   async () => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch('http://localhost:8000/api/v1/users/stories', {
+    const res = await fetch(`${url}/api/v1/users/stories`, {
       method: 'GET',
       headers: {
         'Content-Type': 'Application/json',
@@ -26,7 +27,7 @@ export const createStory = createAsyncThunk(
   'stories/createStory',
   async ({ image, text }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch('http://localhost:8000/api/v1/users/stories', {
+    const res = await fetch(`${url}/api/v1/users/stories`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json',
@@ -38,11 +39,11 @@ export const createStory = createAsyncThunk(
       }),
     });
 
-    const json = await res.json();
-
     if (!res.ok) {
+      const json = await res.json();
       throw new Error(json.message);
     }
+    const json = await res.json();
     return json;
   }
 );

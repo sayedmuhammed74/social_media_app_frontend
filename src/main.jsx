@@ -10,10 +10,10 @@ import store from './redux/store.js';
 // components
 import App from './App.jsx';
 import PageNotFound from './pages/PageNotFound.jsx';
-import Counter from './components/Counter.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import UserPage from './pages/UserPage.jsx';
 import Layout from './pages/Layout.jsx';
 
 const router = createBrowserRouter([
@@ -24,10 +24,6 @@ const router = createBrowserRouter([
         <App />,
       </Layout>
     ),
-  },
-  {
-    path: '/counter',
-    element: <Counter />,
   },
   {
     path: '/login',
@@ -43,6 +39,16 @@ const router = createBrowserRouter([
       <>
         <Layout>
           <ProfilePage />
+        </Layout>
+      </>
+    ),
+  },
+  {
+    path: '/:slug',
+    element: (
+      <>
+        <Layout>
+          <UserPage />
         </Layout>
       </>
     ),

@@ -47,11 +47,12 @@ const Stories = () => {
     <>
       <Toaster />
       <div
-        className="gap-4 items-center justify-center flex-col absolute z-50 h-[350px] w-[400px] p-3 bg-green-400 rounded-md opacity-70 hidden"
+        className="gap-4 items-center justify-center flex-col absolute z-50 h-[350px] w-[400px] p-3 bg-white shadow rounded-md opacity-70 hidden"
         ref={addStoryBox}
       >
         <div>
           <input
+            className="p-2 shadow focus:outline-none bg-gray-100"
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}

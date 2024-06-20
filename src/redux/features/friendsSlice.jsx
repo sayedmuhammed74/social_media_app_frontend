@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { url } from './../../url';
 
 export const fetchFriends = createAsyncThunk(
   'friends/fetchFriends',
   async () => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch('http://localhost:8000/api/v1/users/friends', {
+    const res = await fetch(`${url}/api/v1/users/friends`, {
       method: 'GET',
       headers: {
         'Content-Type': 'Application/json',

@@ -1,22 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { url } from './../../url';
 
 export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
-  async ({ user }) => {
+  async ({ userId }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(`http://localhost:8000/api/v1/posts?user=${user}`, {
+    const res = await fetch(`${url}/api/v1/posts?userId=${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'Application/json',
         authorization: token,
       },
     });
-    const json = await res.json();
     // Catch Error
     if (!res.ok) {
+      const json = await res.json();
       throw new Error(json.message);
     }
+    const json = await res.json();
     return json;
   }
 );
@@ -25,7 +27,7 @@ export const createPost = createAsyncThunk(
   'posts/createPost',
   async ({ description, media }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch('http://localhost:8000/api/v1/posts', {
+    const res = await fetch(`${url}/api/v1/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json',

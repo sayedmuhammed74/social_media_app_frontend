@@ -15,7 +15,7 @@ const AddPost = () => {
   const { error, status } = useSelector((state) => state.posts);
   const [description, setDescription] = useState('');
   const [media] = useState([]);
-
+  const { user } = useSelector((state) => state.user);
   // useEffect(() => {
   //   if (status === 'failed') {
   //     toast.error(error); // Assuming you have a toast.error method for displaying errors
@@ -44,7 +44,7 @@ const AddPost = () => {
       >
         <div className="flex gap-2">
           <img
-            src="./imgs/man.jpg"
+            src={user?.picture}
             alt=""
             width={40}
             height={40}

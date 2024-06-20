@@ -2,11 +2,24 @@
 
 import { faShare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useSelector } from 'react-redux';
 import Posts from './../components/Posts/Posts';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const ProfilePage = () => {
-  const { user } = useSelector((state) => state.user);
+  const { slug } = useParams();
+  const [user, setUser] = useState();
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch(`/api/v1/users/${slug}`);
+      const json = await res.json();
+      if (res.ok) {
+        setUser(json.data.user);
+      }
+    };
+    fetchUser();
+  }, [slug]);
+
   return (
     <>
       <section className="my-4">
@@ -22,7 +35,7 @@ const ProfilePage = () => {
             <div className="absolute -top-20 border-4 border-white rounded-full overflow-hidden w-[200px] h-[200px]">
               <img
                 className="h-full aspect-square w-full"
-                src="./../../imgs/man.jpg"
+                src={user?.picture}
                 alt={user?.slug}
               />
             </div>
@@ -50,7 +63,7 @@ const ProfilePage = () => {
       </section>
       <section>
         <div className="container mx-auto p-5 shadow-md rounded-md bg-white">
-          <Posts user="yes" />
+          <Posts userId={user?._id} />
         </div>
       </section>
     </>

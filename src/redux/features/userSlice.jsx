@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { url } from './../../url';
 
 // Login
 export const login = createAsyncThunk(
   'user/login',
   async ({ email, password }) => {
-    const res = await fetch('http://localhost:8000/api/v1/users/login', {
+    const res = await fetch(`${url}/api/v1/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json',
@@ -35,7 +36,7 @@ export const login = createAsyncThunk(
 export const signup = createAsyncThunk(
   'user/signup',
   async ({ firstname, lastname, email, password, passwordConfirm }) => {
-    const res = await fetch('http://localhost:8000/api/v1/users/signup', {
+    const res = await fetch(`${url}/api/v1/users/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json',

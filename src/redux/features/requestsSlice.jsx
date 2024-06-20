@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { url } from './../../url';
 
 export const fetchRequests = createAsyncThunk(
   'requests/fetchRequests',
   async () => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch('http://localhost:8000/api/v1/users/requests', {
+    const res = await fetch(`${url}/api/v1/users/requests`, {
       method: 'GET',
       headers: {
         'Content-Type': 'Application/json',
@@ -26,7 +27,7 @@ export const createRequest = createAsyncThunk(
   'requests/createRequest',
   async ({ reciever }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch('http://localhost:8000/api/v1/requests', {
+    const res = await fetch(`${url}/api/v1/requests`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json',
@@ -48,16 +49,13 @@ export const acceptRequest = createAsyncThunk(
   'requests/acceptRequest',
   async ({ id }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(
-      `http://localhost:8000/api/v1/users/requests/${id}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'Application/json',
-          authorization: token,
-        },
-      }
-    );
+    const res = await fetch(`${url}/api/v1/users/requests/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'Application/json',
+        authorization: token,
+      },
+    });
     const json = await res.json();
     if (!res.ok) {
       throw new Error(json.message);
@@ -71,16 +69,13 @@ export const cancelRequest = createAsyncThunk(
   'requests/cancelRequest',
   async ({ id }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(
-      `http://localhost:8000/api/v1/users/requests/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'Application/json',
-          authorization: token,
-        },
-      }
-    );
+    const res = await fetch(`${url}/api/v1/users/requests/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'Application/json',
+        authorization: token,
+      },
+    });
     if (!res.ok) {
       const json = await res.json();
       throw new Error(json?.message);
