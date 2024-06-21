@@ -22,22 +22,9 @@ const Register = () => {
   const [birthdate, setBirthdate] = useState('');
   const [picture, setPicture] = useState('');
 
-  // const emptyFields = () => {
-  //   setFirstname('');
-  //   setLastname('');
-  //   setEmail('');
-  //   setPassword('');
-  //   setPasswordConfirm('');
-  //   setBio('');
-  //   setBirthdate('');
-  //   setPicture('');
-  // };
-
   const handleRegister = async (e) => {
     e.preventDefault();
-    // if (firstname && lastname && email && password && passwordConfirm) {
     dispatch(signup({ firstname, lastname, email, password, passwordConfirm }));
-    // }
   };
 
   useEffect(() => {
@@ -57,82 +44,83 @@ const Register = () => {
   return (
     <section className="flex flex-col container px-5 py-6 my-12 min-h-[80vh] overflow-hidden rounded-3xl mx-auto max-w-[80vw] bg-gray-200">
       <Toaster />
-      <h1 className="text-3xl font-bold text-center mb-2">DARK SPACE</h1>
-      <p className="text-center">Dark Sapce Social Media Application</p>
+      <h1 className="text-3xl font-bold text-center mb-2 text-primary">
+        DARK SPACE
+      </h1>
+      <p className="text-center font-extralight text-sm text-gray-500">
+        Dark Sapce Social Media Application
+      </p>
       <form
         className="mx-auto mt-3 flex flex-col justify-center gap-3"
         onSubmit={handleRegister}
       >
-        <div className="flex justify-between relative pb-5">
-          <label>Firstname</label>
-          <input
-            type="text"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            placeholder="firstname"
-            name="firstname"
-          />
-        </div>
-        <div className="flex justify-between relative pb-5">
-          <label>Lastname</label>
-          <input
-            type="text"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            placeholder="lastname"
-            name="lastname"
-          />
-        </div>
-        <div className="flex justify-between relative pb-5">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="email"
-            name="email"
-          />
-        </div>
-        <div className="flex justify-between relative pb-5">
-          <label htmlFor="passsword">Passsword</label>
-          <input
-            type="passsword"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="passsword"
-            name="passsword"
-          />
-        </div>
-        <div className="flex justify-between relative pb-5">
-          <label htmlFor="passswordConfirm">Passsword Confirm</label>
-          <input
-            type="passsword"
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-            placeholder="Passsword Confirm"
-            name="passsword_confirm"
-          />
-        </div>
-        <label>Bio</label>
+        <input
+          type="text"
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          placeholder="firstname"
+          name="firstname"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+        />
+        <input
+          type="text"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
+          placeholder="lastname"
+          name="lastname"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+        />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
+          name="email"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+        />
+        <input
+          type="passsword"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="passsword"
+          name="passsword"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+        />
+        <input
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          placeholder="Passsword Confirm"
+          name="passsword_confirm"
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
+        />
         <textarea
+          placeholder="bio"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
+          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
         ></textarea>
-        <div className="flex justify-between">
-          <label htmlFor="picture">Picture</label>
+        <div className="flex items-center gap-5">
+          <label htmlFor="picture" className="text-gray-500">
+            Picture
+          </label>
           <input
             type="file"
             onChange={(e) => setPicture(e.target.value)}
             value={picture}
             name="image"
+            className="text-gray-500"
           />
         </div>
-        <div className="flex justify-between">
-          <label htmlFor="birthdate">Birthdate</label>
+        <div className="flex items-center justify-between">
+          <label htmlFor="birthdate" className="text-gray-500">
+            Birthdate
+          </label>
           <input
             type="date"
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
+            className="p-2 rounded-md focus:outline-none text-gray-500"
           />
         </div>
         <button

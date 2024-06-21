@@ -50,7 +50,7 @@ const ProfilePage = () => {
       </section>
       <section>
         <div className="container mx-auto p-5 shadow-md rounded-md bg-white">
-          <Posts user="yes" />
+          <Posts userId={user?._id} />
         </div>
       </section>
     </>

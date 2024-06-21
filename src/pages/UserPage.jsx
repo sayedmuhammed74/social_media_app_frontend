@@ -5,16 +5,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Posts from './../components/Posts/Posts';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { url } from './../url';
 
 const ProfilePage = () => {
   const { slug } = useParams();
+  console.log(slug);
   const [user, setUser] = useState();
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch(`/api/v1/users/${slug}`);
-      const json = await res.json();
-      if (res.ok) {
-        setUser(json.data.user);
+      try {
+        const token = `Bearer ${Cookies.get('jwt')}`;
+        const res = await fetch(`${url}/api/v1/users/${slug}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'Application/json',
+            authorization: token,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+
+        const json = await res.json();
+        console.log(json);
+        setUser(json?.data.user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
       }
     };
     fetchUser();
