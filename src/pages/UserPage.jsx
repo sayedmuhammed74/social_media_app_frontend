@@ -10,7 +10,6 @@ import { url } from './../url';
 
 const ProfilePage = () => {
   const { slug } = useParams();
-  console.log(slug);
   const [user, setUser] = useState();
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,7 +28,6 @@ const ProfilePage = () => {
         }
 
         const json = await res.json();
-        console.log(json);
         setUser(json?.data.user);
       } catch (error) {
         console.error('Error fetching user:', error);

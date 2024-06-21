@@ -130,6 +130,28 @@ const Navbar = () => {
                   </li>
                   <li>Home</li>
                   <li>Friends</li>
+                  <li>
+                    <button onClick={handleLogout}>Logout</button>
+                  </li>
+                  <i>
+                    <div className="relative md:hidden items-center z-40">
+                      <input
+                        type="search"
+                        placeholder="search"
+                        className="pl-4 pr-8 py-1.5 rounded-tr-lg rounded-tl-lg bg-gray-50 hover:bg-white focus:outline-none"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                      <img
+                        src={searchIcon}
+                        alt=""
+                        width={20}
+                        height={20}
+                        className="absolute right-2"
+                      />
+                      {searchResults()}
+                    </div>
+                  </i>
                 </ul>
               </>
             )}

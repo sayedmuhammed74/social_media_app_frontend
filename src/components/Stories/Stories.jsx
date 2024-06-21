@@ -37,12 +37,6 @@ const Stories = () => {
     dispatch(fetchStories());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (status === 'loading') {
-  //     taost.loading('loading');
-  //   }
-  // }, [status]);
-
   return (
     <>
       <Toaster />
@@ -72,7 +66,7 @@ const Stories = () => {
           Add Story
         </button>
       </div>
-      <div className="text-sm flex justify-start gap-3 overflow-x-scroll py-3 shadow-md rounded-md mb-3 border-r-8 border-l-8 border-white bg-white">
+      <div className="text-sm flex justify-start gap-3 overflow-hidden py-3 shadow-md rounded-md mb-3 border-r-8 border-l-8 border-white bg-white">
         {/* Add Story */}
         <div className="relative overflow-hidden rounded-md h-[140px] min-w-[90px]">
           <img
