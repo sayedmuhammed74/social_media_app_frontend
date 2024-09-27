@@ -5,11 +5,16 @@ import { fetchFriends } from '../../redux/features/friendsSlice';
 
 const Contacts = () => {
   const dispatch = useDispatch();
-  const { friends } = useSelector((state) => state.friends);
+  const { friends, status } = useSelector((state) => state.friends);
 
   useEffect(() => {
     dispatch(fetchFriends());
+    return () => {};
   }, [dispatch]);
+
+  if (status === 'loading') {
+    return <h1>loading</h1>;
+  }
 
   return (
     <div className="p-5">
@@ -21,7 +26,7 @@ const Contacts = () => {
       </div>
       <ul>
         {friends?.map((contact) => (
-          <li key={contact._id}>
+          <li key={contact?._id}>
             <ContactCard contact={contact} />
           </li>
         ))}

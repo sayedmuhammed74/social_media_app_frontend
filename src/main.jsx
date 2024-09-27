@@ -9,9 +9,9 @@ import store from './redux/store.js';
 
 // components
 import App from './App.jsx';
-import PageNotFound from './pages/PageNotFound.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
+import PageNotFound from './pages/NotFound/PageNotFound.jsx';
+import Login from './pages/Auth/Login.jsx';
+import Register from './pages/Auth/Register.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import UserPage from './pages/UserPage.jsx';
 import Layout from './pages/Layout.jsx';
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/:slug',
+    path: '/users/:slug',
     element: (
       <>
         <Layout>

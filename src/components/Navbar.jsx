@@ -48,7 +48,7 @@ const Navbar = () => {
     if (users.length > 0 && search) {
       return (
         <ul
-          className="flex flex-col absolute top-9 rounded-bl-md rounded-br-md bg-white w-[213px] cursor-pointer max-h-[500px] overflow-hidden"
+          className="flex flex-col absolute z-40 top-9 rounded-bl-md rounded-br-md bg-white w-[213px] cursor-pointer max-h-[500px] overflow-hidden"
           ref={searchListComponent}
         >
           {users?.map((user) => (
@@ -57,9 +57,14 @@ const Navbar = () => {
               key={user._id}
               onClick={() => setSearch('')}
             >
-              <Link to={`/${user?.slug}`} className="flex items-center gap-2">
+              <Link
+                to={`/users/${user?.slug}`}
+                className="flex items-center gap-2"
+              >
                 <img src={picture} alt="" className="h-8 w-8 rounded-full" />
-                <span>{user?.fullname}</span>
+                <span>
+                  {user?.firstname} {user?.lastname}
+                </span>
               </Link>
             </li>
           ))}

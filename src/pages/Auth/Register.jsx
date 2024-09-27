@@ -2,12 +2,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { signup } from './../redux/features/userSlice';
+import { signup } from './../../redux/features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
-// Packages
-// import toast, { Toaster } from 'react-hot-toast';
-// Utils
 
 const Register = () => {
   const { error, status } = useSelector((state) => state.user);

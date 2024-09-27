@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { url } from './../../url';
+import { url } from '../../url';
 
-export const fetchPosts = createAsyncThunk(
-  'posts/fetchPosts',
-  async ({ userId }) => {
+export const fetchStories = createAsyncThunk(
+  'stories/fetchStories',
+  async () => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(`${url}/api/v1/posts?userId=${userId}`, {
+    const res = await fetch(`${url}/api/v1/users/stories`, {
       method: 'GET',
       headers: {
         'Content-Type': 'Application/json',
         authorization: token,
       },
     });
-    // Catch Error
+
     if (!res.ok) {
       const json = await res.json();
       throw new Error(json.message);
@@ -23,68 +23,67 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
-export const createPost = createAsyncThunk(
-  'posts/createPost',
-  async ({ description, media }) => {
+export const createStory = createAsyncThunk(
+  'stories/createStory',
+  async ({ image, text }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(`${url}/api/v1/posts`, {
+    const res = await fetch(`${url}/api/v1/users/stories`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json',
         authorization: token,
       },
       body: JSON.stringify({
-        description,
-        media,
+        image,
+        text,
       }),
     });
 
-    const json = await res.json();
-
-    // Catch Error
     if (!res.ok) {
+      const json = await res.json();
       throw new Error(json.message);
     }
+    const json = await res.json();
     return json;
   }
 );
 
-const postsSlice = createSlice({
-  name: 'posts',
+const storiesSlice = createSlice({
+  name: 'stories',
   initialState: {
-    posts: [],
+    stories: [],
     status: 'idle',
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch Posts
-      .addCase(fetchPosts.pending, (state) => {
+      // Fetch All Stories
+      .addCase(fetchStories.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
+      .addCase(fetchStories.fulfilled, (state, action) => {
         state.status = 'success';
-        state.posts = action.payload.data.posts;
+        state.stories = action.payload.data.stories;
       })
-      .addCase(fetchPosts.rejected, (state, action) => {
+      .addCase(fetchStories.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
 
-      // Create Post
-      .addCase(createPost.pending, (state) => {
+      // Create Story
+      .addCase(createStory.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(createPost.fulfilled, (state, action) => {
+      .addCase(createStory.fulfilled, (state, action) => {
         state.status = 'success';
-        state.posts.unshift(action.payload.data.post);
+        state.stories.unshift(action.payload.data.story);
       })
-      .addCase(createPost.rejected, (state, action) => {
+      .addCase(createStory.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
   },
 });
 
-export default postsSlice.reducer;
+export default storiesSlice.reducer;

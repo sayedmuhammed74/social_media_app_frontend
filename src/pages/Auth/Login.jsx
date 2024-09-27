@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 // reducers
-import { login } from '../redux/features/userSlice';
+import { login } from './../../redux/features/userSlice';
 // Packages
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -14,24 +14,6 @@ const Login = () => {
   const { error, status } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const emptyFields = () => {
-  //   setEmail('');
-  //   setPassword('');
-  // };
-
-  // const handleErrors = () => {
-  //   if (email === '') {
-  //     setErrors({ ...errors, email: 'Please provide email.' });
-  //   } else {
-  //     setErrors({ ...errors, email: '' });
-  //   }
-
-  //   if (password === '') {
-  //     setErrors({ ...errors, password: 'Please provide password.' });
-  //   } else {
-  //     setErrors({ ...errors, password: '' });
-  //   }
-  // };
 
   const handleLogin = (e) => {
     e.preventDefault();

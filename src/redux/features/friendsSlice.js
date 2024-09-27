@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { url } from './../../url';
+import { url } from '../../url';
 
 export const fetchFriends = createAsyncThunk(
   'friends/fetchFriends',

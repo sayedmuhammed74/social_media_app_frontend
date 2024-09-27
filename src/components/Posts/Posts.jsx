@@ -8,18 +8,15 @@ import { useEffect } from 'react';
 import { fetchPosts } from '../../redux/features/postsSlice';
 
 const Posts = ({ userId }) => {
-  const { posts, status, error } = useSelector((state) => state.posts);
+  const { posts, status } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchPosts({ userId }));
+    return () => {};
   }, [dispatch, userId]);
 
   if (status === 'loading') {
     return <div>Loading...</div>;
-  }
-
-  if (status === 'faild') {
-    return <div>Error: {error}</div>;
   }
 
   return (
@@ -30,7 +27,6 @@ const Posts = ({ userId }) => {
         {/* Posts */}
         <div>
           {posts?.map((post) => (
-            // <div key={post._id}>{post.discription}</div>
             <PostCard post={post} key={post._id} />
           ))}
         </div>

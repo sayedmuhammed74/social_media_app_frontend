@@ -2,42 +2,24 @@
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Packages
-import toast, { Toaster } from 'react-hot-toast';
-
 // Hooks
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createPost } from './../../redux/features/postsSlice';
+import { createPost, fetchPosts } from './../../redux/features/postsSlice';
 
 const AddPost = () => {
   const dispatch = useDispatch();
-  const { error, status } = useSelector((state) => state.posts);
   const [description, setDescription] = useState('');
   const [media] = useState([]);
   const { user } = useSelector((state) => state.user);
-  // useEffect(() => {
-  //   if (status === 'failed') {
-  //     toast.error(error); // Assuming you have a toast.error method for displaying errors
-  //   } else if (status === 'success') {
-  //     toast.success('Creaeted Successfully');
-  //   }
-  // }, [status, error]);
 
   const handleCreatePost = () => {
     dispatch(createPost({ media, description }));
-    setTimeout(() => {
-      if (status === 'failed') {
-        toast.error(error); // Assuming you have a toast.error method for displaying errors
-      } else if (status === 'success') {
-        toast.success('Creaeted Successfully');
-      }
-    }, 700);
+    dispatch(fetchPosts({ userId: '' }));
   };
 
   return (
     <>
-      <Toaster />
       <form
         onSubmit={handleCreatePost}
         className="flex justify-between p-5 bg-white"

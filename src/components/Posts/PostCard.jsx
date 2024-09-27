@@ -6,13 +6,9 @@ import {
   faHeart,
   faShare,
 } from '@fortawesome/free-solid-svg-icons';
-import { convertMilliseconds } from './../../utils/convertTime';
+import moment from 'moment';
 
 const PostCard = ({ post }) => {
-  const { days, hours, minutes, seconds } = convertMilliseconds(
-    Date.now() - new Date(post.createdAt)
-  );
-
   const [showMoreText, setShowMoreText] = useState(false);
   const [showMoreImages, setShowMoreImages] = useState(false);
 
@@ -35,10 +31,7 @@ const PostCard = ({ post }) => {
               {post?.user.firstname} {post?.user.lastname}
             </span>
             <span className="flex gap-1 font-extralight text-gray-400">
-              {seconds > 0 && <span>{seconds}s</span>}
-              {minutes > 0 && <span>{minutes}m</span>}
-              {hours > 0 && <span>{hours}h</span>}
-              {days > 0 && <span>{days}d</span>}
+              {moment(post?.createdAt).fromNow()}
             </span>
           </div>
         </div>
@@ -55,7 +48,7 @@ const PostCard = ({ post }) => {
         )}
       </div>
       <div className="flex gap-2 p-3">
-        {post.media
+        {post?.media
           .slice(0, showMoreImages ? undefined : 2)
           .map((media, index) => (
             <img
@@ -65,7 +58,7 @@ const PostCard = ({ post }) => {
               className="w-1/2 h-20 object-cover rounded-sm"
             />
           ))}
-        {post.media.length > 2 && (
+        {post?.media.length > 2 && (
           <span
             className="text-blue-500 cursor-pointer self-end"
             onClick={toggleImages}
@@ -75,7 +68,7 @@ const PostCard = ({ post }) => {
         )}
       </div>
       <div className="flex items-center gap-2">
-        <span>{post.totalLikes}</span>
+        <span>{post?.totalLikes}</span>
         <div className="relative flex">
           {[...Array(3)].map((_, index) => (
             <img
@@ -95,7 +88,7 @@ const PostCard = ({ post }) => {
           <FontAwesomeIcon icon={faComment} style={{ color: '#74C0FC' }} />
         </div>
         <div className="flex gap-2 items-center p-2">
-          <span className="text-gray-500">{post.totalComments} comments</span>
+          <span className="text-gray-500">{post?.totalComments} comments</span>
           <FontAwesomeIcon icon={faShare} style={{ color: '#74C0FC' }} />
         </div>
       </div>

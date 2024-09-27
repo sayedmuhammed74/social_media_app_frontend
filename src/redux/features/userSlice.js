@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { url } from './../../url';
+import { url } from '../../url';
 
 // Login
 export const login = createAsyncThunk(

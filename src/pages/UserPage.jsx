@@ -7,10 +7,22 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { url } from './../url';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import {
+  acceptRequest,
+  cancelRequest,
+  createRequest,
+} from '../redux/features/requestsSlice';
 
 const ProfilePage = () => {
   const { slug } = useParams();
-  const [user, setUser] = useState();
+  const dispatch = useDispatch();
+  const [showBtn, setShowBtn] = useState(false);
+  const [user, setUser] = useState(undefined);
+  const [request, setRequest] = useState({});
+
+  // Fetch User
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,13 +45,51 @@ const ProfilePage = () => {
         console.error('Error fetching user:', error);
       }
     };
-    fetchUser();
+    slug && fetchUser();
+    return () => {};
   }, [slug]);
+
+  useEffect(() => {
+    if (!user) return;
+    axios
+      .get(`${url}/api/v1/users/requests/${user?._id}`, {
+        headers: { authorization: `Bearer ${Cookies.get('jwt')}` },
+      })
+      .then((res) => setRequest(res.data.data.request))
+      .catch((err) => console.log(err));
+    return () => {};
+  }, [user]);
+
+  const handleUnfriend = () => {
+    dispatch(cancelRequest({ id: request?._id }));
+    setShowBtn(false);
+    setRequest({});
+  };
+
+  const handleAddFriend = () => {
+    dispatch(createRequest({ reciever: user?._id }));
+    axios
+      .get(`${url}/api/v1/users/requests/${user?._id}`, {
+        headers: { authorization: `Bearer ${Cookies.get('jwt')}` },
+      })
+      .then((res) => setRequest(res.data.data.request))
+      .catch((err) => console.log(err));
+  };
+
+  const handleAcceptRequest = () => {
+    dispatch(acceptRequest({ id: request?._id }));
+    axios
+      .get(`${url}/api/v1/users/requests/${user?._id}`, {
+        headers: { authorization: `Bearer ${Cookies.get('jwt')}` },
+      })
+      .then((res) => setRequest(res.data.data.request))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
-      <section className="my-4">
-        <div className="container mx-auto p-5 shadow-md rounded-md bg-white">
+      <section className="my-5">
+        <div className="container w-[90%] mx-auto p-5 shadow-md rounded-md bg-white">
           <div className="h-[300px]">
             <img
               className="h-full object-cover w-full"
@@ -60,11 +110,54 @@ const ProfilePage = () => {
           <div>
             <div className="container mx-auto px-8 flex flex-col text-gray-500">
               <h2 className="font-bold text-2xl mb-2 text-slate-800">
-                {user?.fullname}
+                {user?.firstname} {user?.lastname}
               </h2>
               <span className="ml-2">Cairo, Egypt</span>
               <span className="ml-2">@{user?.slug}</span>
               <div className="flex gap-3 my-2 font-medium text-lg">
+                {request?.status === 'accepted' && (
+                  <div className="relative flex flex-col divide-y">
+                    <button
+                      className={`w-28 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800`}
+                      onClick={() => setShowBtn((prev) => !prev)}
+                    >
+                      Friends
+                    </button>
+                    <button
+                      onClick={handleUnfriend}
+                      className={`${
+                        showBtn ? 'inline' : 'hidden'
+                      } absolute top-8 left-0 w-28 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800`}
+                    >
+                      Unfriend
+                    </button>
+                  </div>
+                )}
+                {!request?.status && (
+                  <button
+                    className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
+                    onClick={handleAddFriend}
+                  >
+                    Add Friend
+                  </button>
+                )}
+                {request?.status === 'pending' && request?.to === user?.id && (
+                  <button
+                    className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
+                    onClick={handleUnfriend}
+                  >
+                    Cancel
+                  </button>
+                )}
+                {request?.status === 'pending' &&
+                  request?.from === user?.id && (
+                    <button
+                      className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
+                      onClick={handleAcceptRequest}
+                    >
+                      Accept
+                    </button>
+                  )}
                 <button className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800">
                   Message
                 </button>
@@ -76,9 +169,7 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section>
-        <div className="container mx-auto p-5 shadow-md rounded-md bg-white">
+        <div className="container w-[90%] mt-5 mx-auto p-5 shadow-md rounded-md bg-white">
           <Posts userId={user?._id} />
         </div>
       </section>
