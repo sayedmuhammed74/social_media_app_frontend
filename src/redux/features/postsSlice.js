@@ -8,7 +8,7 @@ export const fetchPosts = createAsyncThunk(
     const token = `Bearer ${Cookies.get('jwt')}`;
     const res = await fetch(`${url}/api/v1/posts?userId=${userId}`, {
       method: 'GET',
-      credentials: 'include',
+      // credentials: 'include',
       headers: {
         'Content-Type': 'Application/json',
         authorization: token,

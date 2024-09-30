@@ -55,7 +55,10 @@ const Navbar = () => {
             <li
               className="p-3 hover:bg-gray-50"
               key={user._id}
-              onClick={() => setSearch('')}
+              onClick={() => {
+                setSearch('');
+                setShowDropList(false);
+              }}
             >
               <Link
                 to={`/users/${user?.slug}`}
@@ -130,6 +133,7 @@ const Navbar = () => {
                     <Link
                       className="flex gap-2 items-center"
                       to={`/profile/${user.slug}`}
+                      onClick={() => setShowDropList(false)}
                     >
                       <img
                         src={user?.picture}
@@ -139,9 +143,9 @@ const Navbar = () => {
                       <span>Profile</span>
                     </Link>
                   </li>
-                  <li>Home</li>
-                  <li>Friends</li>
-                  <li>
+                  <li onClick={() => setShowDropList(false)}>Home</li>
+                  <li onClick={() => setShowDropList(false)}>Friends</li>
+                  <li onClick={() => setShowDropList(false)}>
                     <button onClick={handleLogout}>Logout</button>
                   </li>
                   <i>
