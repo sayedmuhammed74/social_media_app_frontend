@@ -114,7 +114,6 @@ const requestsSlice = createSlice({
       })
       .addCase(createRequest.fulfilled, (state) => {
         state.status = 'success';
-        fetchRequests();
       })
       .addCase(createRequest.rejected, (state, action) => {
         state.status = 'failed';

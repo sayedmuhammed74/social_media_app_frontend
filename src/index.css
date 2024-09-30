@@ -44,3 +44,7 @@ nav input {
   display: flex;
   gap: 5px;
 }
+
+input:focus {
+  outline: none;
+}

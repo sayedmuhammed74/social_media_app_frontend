@@ -58,7 +58,6 @@ export const signup = createAsyncThunk(
 
     // set token to cookies
     Cookies.set('jwt', json.token);
-    console.log('success', json);
     // set user to local storage
     localStorage.setItem('user', JSON.stringify(json.data.user));
     return json;
@@ -66,7 +65,9 @@ export const signup = createAsyncThunk(
 );
 
 // check if user exist in local host
-const user = JSON.parse(localStorage.getItem('user')) || {};
+const user = localStorage.getItem('user')
+  ? JSON.parse(localStorage.getItem('user'))
+  : {};
 
 // User Slice
 const userSlice = createSlice({
@@ -79,8 +80,8 @@ const userSlice = createSlice({
   reducers: {
     logout(state) {
       Cookies.remove('jwt');
-      state.user = {};
       localStorage.removeItem('user');
+      state.user = {};
       state.status = 'idle';
       state.error = null;
     },

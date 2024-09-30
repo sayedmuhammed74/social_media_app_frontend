@@ -1,6 +1,4 @@
 // components
-// import Counter from './components/Counter';
-import { useEffect } from 'react';
 import Contacts from './components/Contacts/Contacts';
 import Posts from './components/Posts/Posts';
 import Requests from './components/Requests/Requests';
@@ -8,14 +6,8 @@ import Sidebar from './components/Sidebar';
 import Stories from './components/Stories/Stories';
 import UsernameCard from './components/UsernameCard';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 function App() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (Cookies.get('jwt') === undefined) {
-      navigate('/login');
-    }
-  }, [navigate]);
+  console.log(Cookies.get('name'));
   return (
     <>
       <div className="flex justify-center lg:justify-normal gap-5 mt-2">

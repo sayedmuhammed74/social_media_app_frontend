@@ -1,11 +1,15 @@
+// Hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { logout } from './../redux/features/userSlice';
-import logo from './../assets/imgs/logo.svg';
-import Cookies from 'js-cookie';
-import picture from './../assets/imgs/man.jpg';
-import searchIcon from './../assets/imgs/icons/magnifying-glass-solid.svg';
 import { useEffect, useRef, useState } from 'react';
+// Actions
+import { logout } from './../redux/features/userSlice';
+// Icons
+import logo from './../assets/imgs/logo.svg';
+import searchIcon from './../assets/imgs/icons/magnifying-glass-solid.svg';
+import DropListIcon from './../assets/imgs/icons/list-ul-solid.svg';
+// Utils
+import Cookies from 'js-cookie';
 import { url } from './../url';
 
 const Navbar = () => {
@@ -16,14 +20,10 @@ const Navbar = () => {
   const [users, setUsers] = useState([]);
   const searchListComponent = useRef(null);
   const dropList = useRef(null);
+  const [showDropList, setShowDropList] = useState(false);
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
-  };
-
-  const handleDropList = () => {
-    dropList.current.classList.toggle('hidden');
-    dropList.current.classList.toggle('flex');
+    setTimeout(() => navigate('/login'), 1000);
   };
 
   useEffect(() => {
@@ -61,7 +61,11 @@ const Navbar = () => {
                 to={`/users/${user?.slug}`}
                 className="flex items-center gap-2"
               >
-                <img src={picture} alt="" className="h-8 w-8 rounded-full" />
+                <img
+                  src={user?.picture}
+                  alt=""
+                  className="h-8 w-8 rounded-full"
+                />
                 <span>
                   {user?.firstname} {user?.lastname}
                 </span>
@@ -109,16 +113,18 @@ const Navbar = () => {
             {user && (
               <>
                 <img
-                  src="./imgs/icons/list-ul-solid.svg"
+                  src={DropListIcon}
                   className="cursor-pointer hover:scale-105 transition-all flex md:hidden"
                   alt=""
                   width={30}
                   height={30}
-                  onClick={handleDropList}
+                  onClick={() => setShowDropList((prev) => !prev)}
                 />
                 <ul
                   ref={dropList}
-                  className=" absolute z-10 p-3 transition-all text-slate-800 top-[42px] right-0 w-full font-medium bg-gray-100 hidden md:hidden flex-col gap-5 justify-center items-center"
+                  className={`${
+                    showDropList ? 'flex' : 'hidden'
+                  } absolute z-10 p-3 transition-all text-slate-800 top-[42px] right-0 w-full font-medium bg-gray-100 md:hidden flex-col gap-5 justify-center items-center`}
                 >
                   <li>
                     <Link
@@ -126,7 +132,7 @@ const Navbar = () => {
                       to={`/profile/${user.slug}`}
                     >
                       <img
-                        src={picture}
+                        src={user?.picture}
                         alt={user.slug}
                         className="w-8 h-8 rounded-full"
                       />

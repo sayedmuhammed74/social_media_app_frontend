@@ -1,6 +1,6 @@
 // Icons
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Hooks
 import { useState } from 'react';
@@ -12,10 +12,11 @@ const AddPost = () => {
   const [description, setDescription] = useState('');
   const [media] = useState([]);
   const { user } = useSelector((state) => state.user);
-
   const handleCreatePost = () => {
-    dispatch(createPost({ media, description }));
-    dispatch(fetchPosts({ userId: '' }));
+    if (media || description) {
+      dispatch(createPost({ media, description }));
+      dispatch(fetchPosts({ userId: '' }));
+    }
   };
 
   return (
@@ -39,13 +40,20 @@ const AddPost = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          {/* <input
+            type="file"
+            placeholder=""
+            className="text-lg font-light focus:outline-none text-slate-300 focus:text-slate-900"
+            value={media[0]}
+            onChange={(e) => setMedia([e.target.files[0]])}
+          /> */}
         </div>
         <button
-          className="flex items-center gap-2 px-2 rounded-md cursor-pointer text-white bg-primary"
+          className="px-3 h-8 rounded-md cursor-pointer hover:opacity-80 text-white bg-primary"
           type="submit"
         >
-          <FontAwesomeIcon icon={faPaperclip} />
-          <span>Post it</span>
+          {/* <FontAwesomeIcon icon={faPaperclip} /> */}
+          share
         </button>
       </form>
     </>

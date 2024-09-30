@@ -161,7 +161,12 @@ const ProfilePage = () => {
                 <button className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800">
                   Message
                 </button>
-                <button className="flex px-5 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary">
+                <button
+                  onClick={() =>
+                    navigator.clipboard.writeText(url + '/users/' + user?.slug)
+                  }
+                  className="flex px-5 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary"
+                >
                   <FontAwesomeIcon icon={faShare} style={{ color: 'white' }} />
                   Share Profile
                 </button>

@@ -7,7 +7,7 @@ const ContactCard = ({ contact }) => {
     <div className="flex justify-between items-center px-3 py-2">
       <div className="flex items-center gap-2">
         <img
-          src="./imgs/man.jpg"
+          src={contact?.picture}
           className="rounded-md"
           alt=""
           width={30}

@@ -7,7 +7,6 @@ import { login } from './../../redux/features/userSlice';
 // Packages
 import toast, { Toaster } from 'react-hot-toast';
 
-import Cookies from 'js-cookie';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,12 +18,6 @@ const Login = () => {
     e.preventDefault();
     dispatch(login({ email, password }));
   };
-
-  useEffect(() => {
-    if (Cookies.get('jwt') !== undefined) {
-      navigate('/');
-    }
-  }, [navigate]);
 
   useEffect(() => {
     if (status === 'failed') {

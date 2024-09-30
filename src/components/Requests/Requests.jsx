@@ -4,19 +4,15 @@ import { useEffect } from 'react';
 import { fetchRequests } from '../../redux/features/requestsSlice';
 const Requests = () => {
   const dispatch = useDispatch();
-  const { requests } = useSelector((state) => state.requests);
+  const { requests, status } = useSelector((state) => state.requests);
 
   useEffect(() => {
     dispatch(fetchRequests());
   }, [dispatch]);
 
-  // if (status === 'loading') {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (status === 'faild') {
-  //   return <div>Error: {error}</div>;
-  // }
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="p-5">

@@ -2,6 +2,7 @@ import { faShare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux';
 import Posts from './../components/Posts/Posts';
+import { url } from '../url';
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
@@ -20,7 +21,7 @@ const ProfilePage = () => {
             <div className="absolute -top-20 border-4 border-white rounded-full overflow-hidden w-[200px] h-[200px]">
               <img
                 className="h-full aspect-square w-full"
-                src="./../../imgs/man.jpg"
+                src={user?.picture}
                 alt={user?.slug}
               />
             </div>
@@ -34,7 +35,14 @@ const ProfilePage = () => {
               <span className="ml-2">Cairo, Egypt</span>
               <span className="ml-2">@{user?.slug}</span>
               <div className="flex gap-3 my-2 font-medium text-lg">
-                <button className="flex px-5 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary">
+                <button
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      url + '/profile/' + user?.slug
+                    )
+                  }
+                  className="flex px-5 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary"
+                >
                   <FontAwesomeIcon icon={faShare} style={{ color: 'white' }} />
                   Share Profile
                 </button>

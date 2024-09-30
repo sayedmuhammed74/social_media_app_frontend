@@ -1,23 +1,23 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   acceptRequest,
   cancelRequest,
+  fetchRequests,
 } from '../../redux/features/requestsSlice';
-import { useEffect } from 'react';
+import { fetchFriends } from '../../redux/features/friendsSlice';
 
 const RequestCard = ({ request }) => {
   const dispatch = useDispatch();
-  const { requests } = useSelector((state) => state.requests);
 
   const handleAcceptRequest = () => {
     dispatch(acceptRequest({ id: request?._id }));
+    dispatch(fetchRequests());
+    dispatch(fetchFriends());
   };
-
-  useEffect(() => console.log(requests), [requests]);
 
   const handleCancelRequest = () => {
     dispatch(cancelRequest({ id: request?._id }));
-    console.log(requests);
+    dispatch(fetchRequests());
   };
 
   return (
