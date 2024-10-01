@@ -9,6 +9,7 @@ import { fetchPosts } from '../../redux/features/postsSlice';
 import Loading from '../Loading';
 
 const Posts = ({ userId }) => {
+  const { user } = useSelector((state) => state.user);
   const { posts, totalPages, status } = useSelector((state) => state.posts);
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const Posts = ({ userId }) => {
     <>
       <section>
         {/* Add New Post */}
-        {!userId && <AddPost />}
+        {userId === user._id && <AddPost />}
         {/* Posts */}
         <div>
           {posts?.map((post) => (

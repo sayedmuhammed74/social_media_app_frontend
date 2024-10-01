@@ -1,15 +1,13 @@
 // Hooks
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { signup } from './../../redux/features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import toast, { Toaster } from 'react-hot-toast';
 
 const Register = () => {
-  const { error, status } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { error, status } = useSelector((state) => state.user);
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
@@ -21,32 +19,28 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    dispatch(signup({ firstname, lastname, email, password, passwordConfirm }));
+    if (firstname && lastname && email && password && passwordConfirm) {
+      dispatch(
+        signup({ firstname, lastname, email, password, passwordConfirm })
+      );
+    }
   };
 
   useEffect(() => {
-    if (Cookies.get('jwt') !== undefined) {
+    if (status === 'success') {
       navigate('/');
     }
-  }, [navigate]);
-
-  useEffect(() => {
-    if (status === 'failed') {
-      toast.error(error); // Assuming you have a toast.error method for displaying errors
-    } else if (status === 'success') {
-      navigate('/');
-    }
-  }, [status, error, navigate]);
+  }, [status, navigate]);
 
   return (
     <section className="flex flex-col container px-5 py-6 my-12 min-h-[80vh] overflow-hidden rounded-3xl mx-auto max-w-[80vw] bg-gray-200">
-      <Toaster />
       <h1 className="text-3xl font-bold text-center mb-2 text-primary">
         DARK SPACE
       </h1>
       <p className="text-center font-extralight text-sm text-gray-500">
         Dark Sapce Social Media Application
       </p>
+      <span className="text-center text-red-400">{error}</span>
       <form
         className="mx-auto mt-3 flex flex-col justify-center gap-3"
         onSubmit={handleRegister}
@@ -133,7 +127,6 @@ const Register = () => {
         >
           <Link to="/login">Login</Link>
         </button>
-        {error && <span>{error}</span>}
       </form>
     </section>
   );

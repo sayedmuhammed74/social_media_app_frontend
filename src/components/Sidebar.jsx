@@ -4,10 +4,10 @@ import {
   faGear,
   faHouse,
   faImage,
-  faNewspaper,
-  faUser,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
+import { faRocketchat } from '@fortawesome/free-brands-svg-icons';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
   return (
@@ -18,9 +18,9 @@ const Sidebar = () => {
             icon={faHouse}
             className="text-gray-500 group-hover:text-primary active:text-primary transition-all"
           />
-          <span className="font-medium hover:text-primary text-gray-500">
+          <Link to="/" className="font-medium hover:text-primary text-gray-500">
             Home
-          </span>
+          </Link>
           <span className="absolute right-2 rounded-full text-sm w-4 h-4 flex justify-center items-center text-white bg-primary">
             2
           </span>
@@ -40,15 +40,8 @@ const Sidebar = () => {
           </span>
         </li>
         <li className="flex items-center gap-2 py-4 px-4 relative border-l-4 border-white transition-all cursor-pointer  hover:border-primary">
-          <FontAwesomeIcon icon={faNewspaper} className="text-gray-500" />
-          <span className="font-medium text-gray-500">New Feeds</span>
-          <span className="absolute right-2 rounded-full text-sm w-4 h-4 flex justify-center items-center text-white bg-primary">
-            2
-          </span>
-        </li>
-        <li className="flex items-center gap-2 py-4 px-4 relative border-l-4 border-white transition-all cursor-pointer  hover:border-primary">
-          <FontAwesomeIcon icon={faUser} className="text-gray-500" />
-          <span className="font-medium text-gray-500">Profile</span>
+          <FontAwesomeIcon icon={faRocketchat} className="text-gray-500" />
+          <span className="font-medium text-gray-500">Massenger</span>
           <span className="absolute right-2 rounded-full text-sm w-4 h-4 flex justify-center items-center text-white bg-primary">
             2
           </span>

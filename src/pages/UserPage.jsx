@@ -91,7 +91,7 @@ const ProfilePage = () => {
           <div className="h-[300px]">
             <img
               className="h-full object-cover w-full"
-              src="./../../imgs/profile-cover.jpg"
+              src={user?.cover}
               alt={user?.slug}
             />
           </div>

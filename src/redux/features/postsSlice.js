@@ -53,22 +53,22 @@ export const createPost = createAsyncThunk(
   }
 );
 
+const initialState = {
+  posts: [],
+  status: 'idle',
+  error: null,
+  totalPosts: 0,
+  totalPages: 0,
+};
+
 const postsSlice = createSlice({
   name: 'posts',
-  initialState: {
-    posts: [],
-    status: 'idle',
-    error: null,
-    totalPosts: 0,
-    totalPages: 0,
-  },
+  initialState,
   reducers: {
     likePost: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const like = action.payload.like; // Assuming the payload contains the like data
-
       const post = state.posts.find((post) => post?.id === postId);
-
       if (post) {
         post.likes.push(like); // Add the like to the post's likes
       }
@@ -76,9 +76,7 @@ const postsSlice = createSlice({
     dislikePost: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const likeId = action.payload.likeId; // Assuming the payload contains the like data
-
       const post = state.posts.find((post) => post?.id === postId);
-
       if (post) {
         post.likes = post.likes.filter((like) => like._id !== likeId); // Add the like to the post's likes
       }
@@ -86,15 +84,21 @@ const postsSlice = createSlice({
     addComment: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const comment = action.payload.comment; // Assuming the payload contains the comment data
-
       const post = state.posts.find((post) => post?.id === postId);
-
       if (post) {
         post.comments.push(comment); // Add the comment to the post's comments
       }
     },
     deleteCommment: () => {},
     editCommment: () => {},
+    deletePost: () => {},
+    resetPosts: (state) => {
+      state.posts = initialState.error;
+      state.status = initialState.status;
+      state.error = initialState.error;
+      state.totalPosts = initialState.totalPosts;
+      state.totalPages = initialState.totalPages;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -137,5 +141,6 @@ export const {
   addComment,
   deleteCommment,
   editCommment,
+  resetPosts,
 } = postsSlice.actions;
 export default postsSlice.reducer;

@@ -11,6 +11,7 @@ import DropListIcon from './../assets/imgs/icons/list-ul-solid.svg';
 // Utils
 import Cookies from 'js-cookie';
 import { url } from './../url';
+import { resetPosts } from '../redux/features/postsSlice';
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
@@ -24,6 +25,7 @@ const Navbar = () => {
   const handleLogout = () => {
     Cookies.remove('jwt');
     dispatch(logout());
+    dispatch(resetPosts());
     navigate('/login');
   };
 
@@ -43,6 +45,7 @@ const Navbar = () => {
     if (search) {
       fetchSearch();
     }
+    return () => {};
   }, [search]);
 
   const searchResults = () => {

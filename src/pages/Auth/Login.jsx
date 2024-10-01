@@ -45,12 +45,12 @@ const Login = () => {
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
         />
         <input
-          type="passsword"
+          type="password"
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="passsword"
-          name="passsword"
+          placeholder="password"
+          name="password"
         />
         <button
           type="submit"

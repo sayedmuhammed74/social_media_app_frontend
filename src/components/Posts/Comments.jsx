@@ -62,7 +62,7 @@ const Comments = ({
         value={inputComment}
         onChange={(e) => setInputComment(e.target.value)}
       />
-      <ul className="flex flex-col gap-1 w-full p-3">
+      <ul className="flex flex-col gap-1 w-full px-3 pt-3">
         {showComments &&
           post?.comments?.map((comment) => (
             <li

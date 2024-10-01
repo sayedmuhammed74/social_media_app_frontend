@@ -11,6 +11,7 @@ const Requests = () => {
   const dispatch = useDispatch();
   const { requests, status } = useSelector((state) => state.requests);
 
+  // Fetch Requests
   useEffect(() => {
     dispatch(fetchRequests());
     return () => {};
@@ -29,7 +30,7 @@ const Requests = () => {
           <RequestCard request={request} key={request._id} />
         ))}
       </div>
-      <Loading status={status} />
+      {requests.length === 0 && <Loading status={status} />}
       {requests.length === 0 && status !== 'loading' && (
         <div className="text-center text-gray-400">no requests</div>
       )}
