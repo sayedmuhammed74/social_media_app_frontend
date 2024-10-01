@@ -1,5 +1,3 @@
-// import { useParams } from 'react-router-dom';
-
 import { faShare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Posts from './../components/Posts/Posts';

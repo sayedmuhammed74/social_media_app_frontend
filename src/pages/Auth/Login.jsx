@@ -5,8 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 // reducers
 import { login } from './../../redux/features/userSlice';
 // Packages
-import toast, { Toaster } from 'react-hot-toast';
-
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,22 +18,20 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (status === 'failed') {
-      toast.error(error); // Assuming you have a toast.error method for displaying errors
-    } else if (status === 'success') {
+    if (status === 'success') {
       navigate('/');
     }
-  }, [status, error, navigate]);
+  }, [status, navigate]);
 
   return (
     <section className="flex flex-col container px-5 py-6 my-12 min-h-[80vh] overflow-hidden rounded-3xl mx-auto max-w-[80vw] bg-gray-200">
-      <Toaster />
       <h1 className="text-3xl font-bold text-center mb-2 text-primary">
         DARK SPACE
       </h1>
       <p className="text-center font-extralight text-sm text-gray-500">
         Dark Space Social Media Application
       </p>
+      <span className="text-center text-red-400">{error}</span>
       <form
         className="mx-auto mt-3 flex flex-col justify-center gap-3"
         onSubmit={handleLogin}

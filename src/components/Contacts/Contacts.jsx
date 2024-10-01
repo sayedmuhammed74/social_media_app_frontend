@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ContactCard from './ContactCard';
 import { useEffect } from 'react';
 import { fetchFriends } from '../../redux/features/friendsSlice';
+import Loading from '../Loading';
 
 const Contacts = () => {
   const dispatch = useDispatch();
@@ -11,10 +12,6 @@ const Contacts = () => {
     dispatch(fetchFriends());
     return () => {};
   }, [dispatch]);
-
-  if (status === 'loading') {
-    return <h1>loading</h1>;
-  }
 
   return (
     <div className="p-5">
@@ -31,6 +28,7 @@ const Contacts = () => {
           </li>
         ))}
       </ul>
+      <Loading status={status} />
     </div>
   );
 };

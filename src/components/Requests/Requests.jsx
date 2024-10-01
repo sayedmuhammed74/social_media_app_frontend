@@ -1,18 +1,20 @@
+// Hooks
 import { useDispatch, useSelector } from 'react-redux';
-import RequestCard from './RequestCard';
 import { useEffect } from 'react';
+// Actions
 import { fetchRequests } from '../../redux/features/requestsSlice';
+// Components
+import RequestCard from './RequestCard';
+import Loading from '../Loading';
+
 const Requests = () => {
   const dispatch = useDispatch();
   const { requests, status } = useSelector((state) => state.requests);
 
   useEffect(() => {
     dispatch(fetchRequests());
+    return () => {};
   }, [dispatch]);
-
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="p-5">
@@ -27,6 +29,10 @@ const Requests = () => {
           <RequestCard request={request} key={request._id} />
         ))}
       </div>
+      <Loading status={status} />
+      {requests.length === 0 && status !== 'loading' && (
+        <div className="text-center text-gray-400">no requests</div>
+      )}
     </div>
   );
 };

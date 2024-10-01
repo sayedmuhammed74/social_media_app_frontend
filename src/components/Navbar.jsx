@@ -23,8 +23,13 @@ const Navbar = () => {
   const [showDropList, setShowDropList] = useState(false);
   const handleLogout = () => {
     dispatch(logout());
-    setTimeout(() => navigate('/login'), 1000);
   };
+
+  useEffect(() => {
+    if (!user?._id) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     const fetchSearch = async () => {

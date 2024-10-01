@@ -5,9 +5,7 @@ import Requests from './components/Requests/Requests';
 import Sidebar from './components/Sidebar';
 import Stories from './components/Stories/Stories';
 import UsernameCard from './components/UsernameCard';
-import Cookies from 'js-cookie';
 function App() {
-  console.log(Cookies.get('name'));
   return (
     <>
       <div className="flex justify-center lg:justify-normal gap-5 mt-2">
