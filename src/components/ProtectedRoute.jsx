@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children }) => {
   return Cookies.get('jwt') ? (
     children
   ) : (
-    <Navigate to="/login" replace={true}></Navigate>
+    <Navigate to="/login" replace={true} />
   );
 };
 

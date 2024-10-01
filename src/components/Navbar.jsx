@@ -22,14 +22,10 @@ const Navbar = () => {
   const dropList = useRef(null);
   const [showDropList, setShowDropList] = useState(false);
   const handleLogout = () => {
+    Cookies.remove('jwt');
     dispatch(logout());
+    navigate('/login');
   };
-
-  useEffect(() => {
-    if (!user?._id) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
 
   useEffect(() => {
     const fetchSearch = async () => {

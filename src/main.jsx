@@ -34,11 +34,19 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: !Cookies.get('jwt') ? <Login /> : <Navigate to="/"></Navigate>,
+    element: !Cookies.get('jwt') ? (
+      <Login />
+    ) : (
+      <Navigate to="/" replace={true} />
+    ),
   },
   {
     path: '/register',
-    element: !Cookies.get('jwt') ? <Register /> : <Navigate to="/"></Navigate>,
+    element: !Cookies.get('jwt') ? (
+      <Register />
+    ) : (
+      <Navigate to="/" replace={true} />
+    ),
   },
   {
     path: '/profile/:slug',
