@@ -23,7 +23,6 @@ const Navbar = () => {
   const dropList = useRef(null);
   const [showDropList, setShowDropList] = useState(false);
   const handleLogout = () => {
-    Cookies.remove('jwt');
     dispatch(logout());
     dispatch(resetPosts());
     navigate('/login');

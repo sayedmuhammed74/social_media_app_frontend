@@ -1,5 +1,5 @@
 // Hooks
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signup } from './../../redux/features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,8 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, status } = useSelector((state) => state.user);
+  const pictureRef = useRef();
+
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
@@ -15,14 +17,28 @@ const Register = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [bio, setBio] = useState('');
   const [birthdate, setBirthdate] = useState('');
-  const [picture, setPicture] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (firstname && lastname && email && password && passwordConfirm) {
-      dispatch(
-        signup({ firstname, lastname, email, password, passwordConfirm })
-      );
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append('firstname', firstname);
+    formData.append('lastname', lastname);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('passwordConfirm', passwordConfirm);
+    formData.append('bio', bio);
+    formData.append('birthdate', birthdate);
+    formData.append('picture', pictureRef.current.files[0]);
+    if (
+      firstname &&
+      lastname &&
+      email &&
+      password &&
+      passwordConfirm &&
+      birthdate
+    ) {
+      dispatch(signup(formData));
     }
   };
 
@@ -70,23 +86,24 @@ const Register = () => {
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
         />
         <input
-          type="passsword"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="passsword"
-          name="passsword"
+          placeholder="password"
+          name="password"
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
         />
         <input
           type="password"
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
-          placeholder="Passsword Confirm"
-          name="passsword_confirm"
+          placeholder="Password Confirm"
+          name="passwordConfirm"
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
         />
         <textarea
           placeholder="bio"
+          name="bio"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
@@ -97,9 +114,9 @@ const Register = () => {
           </label>
           <input
             type="file"
-            onChange={(e) => setPicture(e.target.value)}
-            value={picture}
-            name="image"
+            accept="image/*"
+            ref={pictureRef}
+            name="picture"
             className="text-gray-500"
           />
         </div>
@@ -112,6 +129,7 @@ const Register = () => {
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
             className="p-2 rounded-md focus:outline-none text-gray-500"
+            name="birthdate"
           />
         </div>
         <button
@@ -121,6 +139,7 @@ const Register = () => {
         >
           Sign Up
         </button>
+        <span className="text-center text-gray-400">or</span>
         <button
           type="button"
           className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"

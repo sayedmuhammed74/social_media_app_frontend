@@ -33,36 +33,24 @@ export const login = createAsyncThunk(
 );
 
 // Signup
-export const signup = createAsyncThunk(
-  'user/signup',
-  async ({ firstname, lastname, email, password, passwordConfirm }) => {
-    const res = await fetch(`${url}/api/v1/users/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'Application/json',
-      },
-      body: JSON.stringify({
-        firstname,
-        lastname,
-        email,
-        password,
-        passwordConfirm,
-      }),
-    });
+export const signup = createAsyncThunk('user/signup', async (formData) => {
+  const res = await fetch(`${url}/api/v1/users/signup`, {
+    method: 'POST',
+    body: formData,
+  });
 
-    const json = await res.json();
+  const json = await res.json();
 
-    if (!res.ok) {
-      throw new Error(json.message);
-    }
-
-    // set token to cookies
-    Cookies.set('jwt', json.token);
-    // set user to local storage
-    localStorage.setItem('user', JSON.stringify(json.data.user));
-    return json;
+  if (!res.ok) {
+    throw new Error(json.message);
   }
-);
+
+  // set token to cookies
+  Cookies.set('jwt', json.token);
+  // set user to local storage
+  localStorage.setItem('user', JSON.stringify(json.data.user));
+  return json;
+});
 
 // check if user exist in local host
 const user = localStorage.getItem('user')
@@ -80,10 +68,10 @@ const userSlice = createSlice({
   reducers: {
     logout(state) {
       Cookies.remove('jwt');
-      localStorage.removeItem('user');
       state.user = {};
       state.status = 'idle';
       state.error = null;
+      localStorage.removeItem('user');
     },
   },
   extraReducers: (builder) => {

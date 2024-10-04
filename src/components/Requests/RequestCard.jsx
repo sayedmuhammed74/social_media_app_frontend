@@ -1,23 +1,22 @@
+// Hooks
 import { useDispatch } from 'react-redux';
+// Actions
 import {
   acceptRequest,
   cancelRequest,
-  fetchRequests,
 } from '../../redux/features/requestsSlice';
-import { fetchFriends } from '../../redux/features/friendsSlice';
+import { addFriend } from '../../redux/features/friendsSlice';
 
 const RequestCard = ({ request }) => {
   const dispatch = useDispatch();
 
   const handleAcceptRequest = () => {
     dispatch(acceptRequest({ id: request?._id }));
-    dispatch(fetchRequests());
-    dispatch(fetchFriends());
+    dispatch(addFriend(request.from));
   };
 
   const handleCancelRequest = () => {
     dispatch(cancelRequest({ id: request?._id }));
-    dispatch(fetchRequests());
   };
 
   return (

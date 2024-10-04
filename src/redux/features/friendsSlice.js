@@ -31,7 +31,11 @@ const friendsSlice = createSlice({
     status: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+    addFriend: (state, action) => {
+      state.friends.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Get All Fiends
@@ -48,5 +52,5 @@ const friendsSlice = createSlice({
       });
   },
 });
-
+export const { addFriend } = friendsSlice.actions;
 export default friendsSlice.reducer;

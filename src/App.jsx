@@ -16,7 +16,7 @@ function App() {
         </section>
 
         {/* middle */}
-        <section className="w-3/4 lg:w-1/2">
+        <section className="w-5/6 lg:w-1/2">
           <Stories />
           <Posts userId="" />
         </section>

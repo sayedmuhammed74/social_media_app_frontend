@@ -18,7 +18,11 @@ import { url } from '../../url';
 import Comments from './Comments';
 import Likes from './Likes';
 // Actions
-import { dislikePost, likePost } from '../../redux/features/postsSlice';
+import {
+  deletePost,
+  dislikePost,
+  likePost,
+} from '../../redux/features/postsSlice';
 import { Link } from 'react-router-dom';
 
 const PostCard = ({ post }) => {
@@ -27,7 +31,6 @@ const PostCard = ({ post }) => {
   const toggleText = () => setShowMoreText(!showMoreText);
   const dispatch = useDispatch();
   const [showComments, setShowComments] = useState(false);
-  const [showAddComment, setShowAddComment] = useState(false);
   const [isLiked, setIsLiked] = useState([]);
   const { user } = useSelector((state) => state.user);
 
@@ -78,6 +81,19 @@ const PostCard = ({ post }) => {
     }
   };
 
+  // Delete Post
+  const handleDeletePost = () => {
+    axios
+      .delete(`${url}/api/v1/posts/${post._id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get('jwt')}`,
+        },
+      })
+      .then(() => dispatch(deletePost(post?._id)))
+      .catch((err) => console.log(err))
+      .finally(() => setPostOptionsList(false));
+  };
+
   return (
     <div
       className={`p-5 shadow-md flex flex-col rounded-sm my-5 ${
@@ -115,24 +131,30 @@ const PostCard = ({ post }) => {
             postOptionsList ? 'flex' : 'hidden'
           } absolute right-3 top-7 flex-col gap-1 rounded-sm rounded-b-lg shadow-sm divide-x bg-gray-100 select-none`}
         >
-          <li
-            onClick={() => setPostOptionsList(false)}
-            className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-          >
-            Delete Post
-          </li>
-          <li
-            onClick={() => setPostOptionsList(false)}
-            className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-          >
-            Edit Post
-          </li>
-          <li
-            onClick={() => setPostOptionsList(false)}
-            className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-          >
-            Save
-          </li>
+          {user?._id === post?.user?._id && (
+            <>
+              <li
+                onClick={handleDeletePost}
+                className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
+              >
+                Delete Post
+              </li>
+              <li
+                onClick={() => setPostOptionsList(false)}
+                className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
+              >
+                Edit Post
+              </li>
+            </>
+          )}
+          {user?._id !== post?.user?._id && (
+            <li
+              onClick={() => setPostOptionsList(false)}
+              className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
+            >
+              Save
+            </li>
+          )}
         </ul>
       </div>
 
@@ -175,10 +197,7 @@ const PostCard = ({ post }) => {
             />
             {/* Comment Icon */}
             <FontAwesomeIcon
-              onClick={() => {
-                setShowAddComment((prev) => !prev);
-                setShowComments((prev) => !prev);
-              }}
+              onClick={() => setShowComments((prev) => !prev)}
               icon={faComment}
               className="cursor-pointer hover:opacity-80 text-gray-400"
             />
@@ -193,9 +212,7 @@ const PostCard = ({ post }) => {
         {/* Comments */}
         <Comments
           showComments={showComments}
-          showAddComment={showAddComment}
           post={post}
-          setShowAddComment={setShowAddComment}
           setShowComments={setShowComments}
         />
       </div>

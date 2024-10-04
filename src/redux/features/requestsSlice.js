@@ -126,11 +126,15 @@ const requestsSlice = createSlice({
       })
       .addCase(acceptRequest.fulfilled, (state, action) => {
         state.status = 'success';
-        state.requests.forEach((request, index) => {
-          if (request._id === action.payload.data.request._id) {
-            state.requests.splice(index, 1);
-          }
-        });
+        let filteredRequests = state.requests.filter(
+          (request) => request._id !== action.payload.data.request._id
+        );
+        state.requests = filteredRequests;
+        // state.requests.forEach((request, index) => {
+        //   if (request._id === action.payload.data.request._id) {
+        //     state.requests.splice(index, 1);
+        //   }
+        // });
       })
       .addCase(acceptRequest.rejected, (state, action) => {
         state.status = 'failed';

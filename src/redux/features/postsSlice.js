@@ -65,6 +65,22 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
+    // Post
+    editPost: () => {},
+    deletePost: (state, action) => {
+      const filteredPosts = state.posts.filter(
+        (post) => post?.id !== action.payload
+      );
+      state.posts = filteredPosts;
+    },
+    resetPosts: (state) => {
+      state.posts = initialState.error;
+      state.status = initialState.status;
+      state.error = initialState.error;
+      state.totalPosts = initialState.totalPosts;
+      state.totalPages = initialState.totalPages;
+    },
+    // Like
     likePost: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const like = action.payload.like; // Assuming the payload contains the like data
@@ -81,6 +97,7 @@ const postsSlice = createSlice({
         post.likes = post.likes.filter((like) => like._id !== likeId); // Add the like to the post's likes
       }
     },
+    // Comment
     addComment: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const comment = action.payload.comment; // Assuming the payload contains the comment data
@@ -89,16 +106,17 @@ const postsSlice = createSlice({
         post.comments.push(comment); // Add the comment to the post's comments
       }
     },
-    deleteCommment: () => {},
-    editCommment: () => {},
-    deletePost: () => {},
-    resetPosts: (state) => {
-      state.posts = initialState.error;
-      state.status = initialState.status;
-      state.error = initialState.error;
-      state.totalPosts = initialState.totalPosts;
-      state.totalPages = initialState.totalPages;
+    deleteCommment: (state, action) => {
+      const postId = action.payload.postId; // Assuming the payload contains the post ID
+      const commentId = action.payload.commentId; // Assuming the payload contains the comment data
+      const post = state.posts.find((post) => post?.id === postId);
+      if (post) {
+        post.comments = post.comments.filter(
+          (comment) => comment._id !== commentId
+        ); // Add the comment to the post's comments
+      }
     },
+    editCommment: () => {},
   },
   extraReducers: (builder) => {
     builder
@@ -136,11 +154,13 @@ const postsSlice = createSlice({
 });
 
 export const {
+  editPost,
+  deletePost,
+  resetPosts,
   likePost,
   dislikePost,
   addComment,
-  deleteCommment,
   editCommment,
-  resetPosts,
+  deleteCommment,
 } = postsSlice.actions;
 export default postsSlice.reducer;
