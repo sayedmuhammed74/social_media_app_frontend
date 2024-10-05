@@ -55,13 +55,17 @@ const Login = () => {
         <button
           type="submit"
           className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"
-          disabled={status === 'pending' ? true : false}
+          disabled={status === 'pending'}
         >
           Login
         </button>
         <button type="button">
           <span className="mr-1 text-gray-400">Do you have account ?</span>
-          <Link to="/register" className="font-medium text-blue-400">
+          <Link
+            to="/register"
+            className="font-medium text-blue-400"
+            disabled={status === 'pending'}
+          >
             Sign Up
           </Link>
         </button>

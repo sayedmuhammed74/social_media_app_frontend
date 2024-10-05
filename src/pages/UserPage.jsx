@@ -112,18 +112,18 @@ const ProfilePage = () => {
               </h2>
               <span className="ml-2">Cairo, Egypt</span>
               <span className="ml-2">@{user?.slug}</span>
-              <div className="flex gap-3 my-2 font-medium text-lg">
+              <div className="flex flex-col sm:flex-row gap-3 my-2 font-medium text-lg">
                 {request?.status === 'accepted' && (
                   <div className="relative flex flex-col divide-y">
                     <button
-                      className={`w-28 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800`}
+                      className={`w-[65%] sm:w-28 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800`}
                       onClick={() => setShowBtn((prev) => !prev)}
                     >
                       Friends
                     </button>
                     <button
                       onClick={handleUnfriend}
-                      className={`${
+                      className={`w-[65%] sm:w-auto ${
                         showBtn ? 'inline' : 'hidden'
                       } absolute top-8 left-0 w-28 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800`}
                     >
@@ -133,7 +133,7 @@ const ProfilePage = () => {
                 )}
                 {!request?.status && (
                   <button
-                    className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
+                    className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
                     onClick={handleAddFriend}
                   >
                     Add Friend
@@ -141,7 +141,7 @@ const ProfilePage = () => {
                 )}
                 {request?.status === 'pending' && request?.to === user?.id && (
                   <button
-                    className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
+                    className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
                     onClick={handleUnfriend}
                   >
                     Cancel
@@ -150,20 +150,20 @@ const ProfilePage = () => {
                 {request?.status === 'pending' &&
                   request?.from === user?.id && (
                     <button
-                      className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
+                      className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
                       onClick={handleAcceptRequest}
                     >
                       Accept
                     </button>
                   )}
-                <button className="px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800">
+                <button className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800">
                   Message
                 </button>
                 <button
                   onClick={() =>
                     navigator.clipboard.writeText(url + '/users/' + user?.slug)
                   }
-                  className="flex px-5 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary"
+                  className="w-[65%] sm:w-auto flex justify-center px-2 py-1 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary"
                 >
                   <FontAwesomeIcon icon={faShare} style={{ color: 'white' }} />
                   Share Profile
