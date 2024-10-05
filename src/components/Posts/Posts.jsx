@@ -48,6 +48,9 @@ const Posts = ({ userId }) => {
           ))}
         </div>
         <Loading status={status} />
+        {posts.length === 0 && status !== 'loading' && (
+          <div className="text-center text-gray-400 text-sm">no posts</div>
+        )}
       </section>
     </>
   );

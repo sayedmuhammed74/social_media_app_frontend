@@ -12,6 +12,8 @@ import DropListIcon from './../assets/imgs/icons/list-ul-solid.svg';
 import Cookies from 'js-cookie';
 import { url } from './../url';
 import { resetPosts } from '../redux/features/postsSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-regular-svg-icons';
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
@@ -115,6 +117,13 @@ const Navbar = () => {
                 {searchResults()}
               </div>
             )}
+            <div className="relative flex items-center">
+              <FontAwesomeIcon
+                icon={faBell}
+                className=" cursor-pointer hover:opacity-70 font-bold text-2xl text-blue-400"
+              />
+              <span className="absolute -top-2.5 -right-2 text-red-500">2</span>
+            </div>
             {/* DropList */}
             {user && (
               <>

@@ -112,6 +112,7 @@ const ProfilePage = () => {
               </h2>
               <span className="ml-2">Cairo, Egypt</span>
               <span className="ml-2">@{user?.slug}</span>
+              <span className="ml-2">{user?.bio}</span>
               <div className="flex flex-col sm:flex-row gap-3 my-2 font-medium text-lg">
                 {request?.status === 'accepted' && (
                   <div className="relative flex flex-col divide-y">
