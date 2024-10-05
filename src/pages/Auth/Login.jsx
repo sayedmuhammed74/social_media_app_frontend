@@ -59,12 +59,11 @@ const Login = () => {
         >
           Login
         </button>
-        <span className="text-center text-gray-400">or</span>
-        <button
-          type="button"
-          className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"
-        >
-          <Link to="/register">Sign Up</Link>
+        <button type="button">
+          <span className="mr-1 text-gray-400">Do you have account ?</span>
+          <Link to="/register" className="font-medium text-blue-400">
+            Sign Up
+          </Link>
         </button>
       </form>
     </section>

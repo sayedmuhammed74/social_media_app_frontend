@@ -5,18 +5,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { url } from '../../url';
+// Components
+import Comment from './Comment';
 // Actions
-import { addComment, deleteCommment } from '../../redux/features/postsSlice';
-// Icons
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { addComment } from '../../redux/features/postsSlice';
 
 const Comments = ({ showComments, post, setShowComments }) => {
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [inputComment, setInputComment] = useState('');
-  const [commentOptionsList, setCommentOptionsList] = useState(false);
-  const dispatch = useDispatch();
 
   // Add Comment
   const handleAddComment = (e) => {
@@ -45,30 +43,6 @@ const Comments = ({ showComments, post, setShowComments }) => {
     }
   };
 
-  const handleDeleteComment = (commentId) => {
-    axios
-      .delete(`${url}/api/v1/posts/${post._id}/comments/${commentId}`, {
-        headers: {
-          authorization: `Bearer ${Cookies.get('jwt')}`,
-        },
-      })
-      .then(() => dispatch(deleteCommment({ postId: post?._id, commentId })))
-      .catch((err) => console.log(err))
-      .finally(() => setCommentOptionsList(false));
-  };
-
-  // const handleEditComment = () => {
-  //   axios
-  //     .delete(`${url}/api/v1/posts/${post._id}`, {
-  //       headers: {
-  //         authorization: `Bearer ${Cookies.get('jwt')}`,
-  //       },
-  //     })
-  //     .then(() => dispatch(deletePost(post?._id)))
-  //     .catch((err) => console.log(err))
-  //     .finally(() => setPostOptionsList(false));
-  // };
-
   return (
     <div className={`${showComments ? 'p-3' : 'pb-3'} rounded-md bg-gray-100`}>
       {/* add comment */}
@@ -86,52 +60,7 @@ const Comments = ({ showComments, post, setShowComments }) => {
       <ul className="flex flex-col gap-1 w-full px-3 pt-3">
         {showComments &&
           post?.comments?.map((comment) => (
-            <li
-              className="relative flex items-center gap-3 rounded-md w-fit py-1 px-3 bg-gray-200"
-              key={comment?._id}
-            >
-              <img
-                alt=""
-                src={comment?.user?.picture}
-                className="w-6 h-6 rounded-full"
-              />
-              <span>{comment?.content}</span>
-              <FontAwesomeIcon
-                icon={faHeart}
-                className="text-gray-400"
-                // style={{ color: '#74C0FC' }}
-              />
-              <FontAwesomeIcon
-                icon={faEllipsis}
-                className="cursor-pointer hover:opacity-50"
-                onClick={() => setCommentOptionsList((prev) => !prev)}
-              />
-              <ul
-                className={`${
-                  commentOptionsList ? 'flex' : 'hidden'
-                } absolute w-fit right-3 top-7 flex-col gap-1 rounded-sm rounded-b-lg shadow-sm divide-x bg-gray-100 select-none`}
-              >
-                {user?._id === comment?.user?._id && (
-                  <>
-                    <li
-                      onClick={() => handleDeleteComment(comment?._id)}
-                      className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-                    >
-                      Delete Comment
-                    </li>
-                    <li
-                      onClick={() => setCommentOptionsList(false)}
-                      className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-                    >
-                      Edit Comment
-                    </li>
-                  </>
-                )}
-              </ul>
-              <span>
-                {comment?.likes?.length ? comment?.likes?.length : ''}
-              </span>
-            </li>
+            <Comment key={comment?._id} comment={comment} postId={post?._id} />
           ))}
       </ul>
       {/* show comments button */}

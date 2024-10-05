@@ -2,8 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { url } from '../../url';
 
+const FETCH_POSTS = 'posts/fetchPosts';
+const CREATE_POST = 'posts/createPost';
+
 export const fetchPosts = createAsyncThunk(
-  'posts/fetchPosts',
+  FETCH_POSTS,
   async ({ userId, page }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
     const res = await fetch(
@@ -28,7 +31,7 @@ export const fetchPosts = createAsyncThunk(
 );
 
 export const createPost = createAsyncThunk(
-  'posts/createPost',
+  CREATE_POST,
   async ({ description, media }) => {
     const token = `Bearer ${Cookies.get('jwt')}`;
     const res = await fetch(`${url}/api/v1/posts`, {
@@ -43,12 +46,12 @@ export const createPost = createAsyncThunk(
       }),
     });
 
-    const json = await res.json();
-
     // Catch Error
     if (!res.ok) {
+      const json = await res.json();
       throw new Error(json.message);
     }
+    const json = await res.json();
     return json;
   }
 );
@@ -106,7 +109,7 @@ const postsSlice = createSlice({
         post.comments.push(comment); // Add the comment to the post's comments
       }
     },
-    deleteCommment: (state, action) => {
+    deleteComment: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const commentId = action.payload.commentId; // Assuming the payload contains the comment data
       const post = state.posts.find((post) => post?.id === postId);
@@ -116,7 +119,23 @@ const postsSlice = createSlice({
         ); // Add the comment to the post's comments
       }
     },
-    editCommment: () => {},
+    editCommment: (state, action) => {
+      const postId = action.payload.postId; // Assuming the payload contains the post ID
+      const commentId = action.payload.commentId; // Assuming the payload contains the comment data
+      const content = action.payload.content; // Assuming the payload contains the comment data
+      const post = state.posts.find((post) => post?.id === postId);
+      if (post) {
+        post.comments = post.comments.map((comment) => {
+          if (comment._id === commentId) {
+            return {
+              ...comment, // Spread existing comment properties
+              content: content, // Update the content
+            };
+          }
+          return comment; // Return original comment if no match
+        }); // Add the comment to the post's comments
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -125,14 +144,20 @@ const postsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.status = 'success';
-        if (state.totalPosts === action.payload.totalPosts) {
-          state.posts.push(...action.payload.data.posts);
-        } else {
-          state.posts = action.payload.data.posts;
-        }
+        // state.status = 'success';
+        // if (state.totalPosts === action.payload.totalPosts) {
+        //   state.posts.push(...action.payload.data.posts);
+        // } else {
+        //   state.posts = action.payload.data.posts;
+        // }
         state.totalPosts = action.payload.totalPosts;
         state.totalPages = action.payload.totalPages;
+        if (action.payload.currentPage === 1) {
+          state.posts = action.payload.data.posts;
+        } else {
+          state.posts.push(...action.payload.data.posts);
+        }
+        state.status = 'success';
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed';
@@ -143,8 +168,9 @@ const postsSlice = createSlice({
       .addCase(createPost.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(createPost.fulfilled, (state) => {
+      .addCase(createPost.fulfilled, (state, action) => {
         state.status = 'success';
+        state.posts.push(action.payload.data.post);
       })
       .addCase(createPost.rejected, (state, action) => {
         state.status = 'failed';
@@ -161,6 +187,6 @@ export const {
   dislikePost,
   addComment,
   editCommment,
-  deleteCommment,
+  deleteComment,
 } = postsSlice.actions;
 export default postsSlice.reducer;

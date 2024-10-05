@@ -49,7 +49,7 @@ const Register = () => {
   }, [status, navigate]);
 
   return (
-    <section className="flex flex-col container px-5 py-6 my-12 min-h-[80vh] overflow-hidden rounded-3xl mx-auto max-w-[80vw] bg-gray-200">
+    <section className="container mx-auto md:max-w-[80vw] min-h-[80vh] px-5 py-6 my-12 flex flex-col overflow-hidden rounded-3xl bg-gray-200">
       <h1 className="text-3xl font-bold text-center mb-2 text-primary">
         DARK SPACE
       </h1>
@@ -58,7 +58,7 @@ const Register = () => {
       </p>
       <span className="text-center text-red-400">{error}</span>
       <form
-        className="mx-auto mt-3 flex flex-col justify-center gap-3"
+        className="sm:mx-auto mt-3 flex flex-col justify-center gap-3"
         onSubmit={handleRegister}
       >
         <input
@@ -139,12 +139,12 @@ const Register = () => {
         >
           Sign Up
         </button>
-        <span className="text-center text-gray-400">or</span>
-        <button
-          type="button"
-          className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"
-        >
-          <Link to="/login">Login</Link>
+
+        <button type="button">
+          <span className="mr-1 text-gray-400">I have already an account </span>
+          <Link to="/login" className="font-medium text-blue-400">
+            Login
+          </Link>
         </button>
       </form>
     </section>

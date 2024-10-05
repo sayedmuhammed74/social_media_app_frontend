@@ -4,9 +4,9 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import './index.css';
-
+// Cookies
+import Cookies from 'js-cookie';
 // redux
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
@@ -20,6 +20,7 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import UserPage from './pages/UserPage.jsx';
 import Layout from './pages/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+// import isAuthenticated from './utils/isAuthenticated.js';
 
 const router = createBrowserRouter([
   {
@@ -34,19 +35,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: !Cookies.get('jwt') ? (
-      <Login />
-    ) : (
-      <Navigate to="/" replace={true} />
-    ),
+    element: !Cookies.get('jwt') ? <Login /> : <Navigate to="/" />,
   },
   {
     path: '/register',
-    element: !Cookies.get('jwt') ? (
-      <Register />
-    ) : (
-      <Navigate to="/" replace={true} />
-    ),
+    element: !Cookies.get('jwt') ? <Register /> : <Navigate to="/" />,
   },
   {
     path: '/profile/:slug',
