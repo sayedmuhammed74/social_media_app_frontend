@@ -16,20 +16,23 @@ const Navbar = () => {
   // Redux
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
   // States
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState([]);
   const [showDropList, setShowDropList] = useState(false);
-
+  const navigate = useNavigate();
+  // const [loading, setLoading] = useState(false)
   // Refs
   const dropList = useRef(null);
   const searchListComponent = useRef(null);
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    setTimeout(() => navigate('/login'), 0);
   };
+  // setTimeout(() => {
+  //   navigate('/login');
+  // }, 3000);
 
   useEffect(() => {
     search &&

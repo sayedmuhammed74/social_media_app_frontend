@@ -6,7 +6,7 @@ import { login, signup } from './userThunks';
 // check if user exist in local host
 const user = localStorage.getItem('user')
   ? JSON.parse(localStorage.getItem('user'))
-  : {};
+  : null;
 
 // User Slice
 const userSlice = createSlice({
@@ -17,12 +17,12 @@ const userSlice = createSlice({
     error: null,
   },
   reducers: {
-    logout(state) {
+    logout: (state) => {
       Cookies.remove('jwt');
-      state.user = {};
+      localStorage.removeItem('user');
+      state.user = null;
       state.status = 'idle';
       state.error = null;
-      localStorage.removeItem('user');
     },
   },
   extraReducers: (builder) => {
