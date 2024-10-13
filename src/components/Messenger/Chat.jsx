@@ -90,7 +90,7 @@ const Chat = ({ chatId }) => {
   };
 
   return (
-    <section className="flex-1 shadow-md rounded-md overflow-hidden">
+    <section className="flex flex-col flex-1 shadow-md rounded-md overflow-hidden">
       {/* header */}
       <div className="flex justify-between items-center p-3 border-b-2 bg-white">
         <div className="flex gap-3 items-center">
@@ -119,7 +119,7 @@ const Chat = ({ chatId }) => {
       </div>
 
       {/* chat */}
-      <div className="h-[65vh] flex flex-col px-5 gap-1 py-2 w-full overflow-y-auto scrollbar">
+      <div className="md:h-[65vh] flex flex-col px-5 gap-1 py-2 w-full overflow-y-auto scrollbar">
         {conversation?.map((message) =>
           message.sender === user?._id ? (
             <UserMessage message={message.content} key={message._id} />

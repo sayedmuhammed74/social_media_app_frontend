@@ -19,13 +19,13 @@ const Chats = ({ setChatId }) => {
   }, [dispatch]);
 
   return (
-    <div className="lg:w-1/5 rounded-l-md shadow bg-white hidden md:inline overflow-hidden">
+    <div className="lg:w-1/5 rounded-l-md shadow bg-white overflow-hidden">
       <input
         type="text"
         placeholder="search"
         className="w-[90%] px-3 py-1.5 m-4 text-sm rounded-md bg-gray-50"
       />
-      <ul className="border-t divide-y">
+      <ul className="border-t divide-y flex flex-row md:flex-col">
         {chats?.map((conv) => {
           const sender = checkSender(conv?.members, user?._id);
           return (
@@ -39,7 +39,7 @@ const Chats = ({ setChatId }) => {
                 src={sender?.picture}
                 className="w-10 h-10 rounded-full"
               />
-              <div className="flex flex-col gap-1">
+              <div className="hidden md:flex flex-col gap-1 ">
                 <span className="font-medium text-slate-900">
                   {sender?.firstname}
                 </span>
