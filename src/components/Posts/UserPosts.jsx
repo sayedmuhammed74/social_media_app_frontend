@@ -42,7 +42,7 @@ const UserPosts = ({ userId }) => {
   return (
     <section>
       {/* Add New Post */}
-      {userId === user._id && <AddPost />}
+      {userId === user?._id && <AddPost />}
       {/* Posts */}
       <div>
         {userPosts?.map((post, index) => (

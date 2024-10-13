@@ -52,7 +52,7 @@ const Navbar = () => {
           {users?.map((user) => (
             <li
               className="p-3 hover:bg-gray-50"
-              key={user._id}
+              key={user?._id}
               onClick={() => {
                 setSearch('');
                 setShowDropList(false);
@@ -131,12 +131,12 @@ const Navbar = () => {
                   <li>
                     <Link
                       className="flex gap-2 items-center"
-                      to={`/profile/${user.slug}`}
+                      to={`/profile/${user?.slug}`}
                       onClick={() => setShowDropList(false)}
                     >
                       <img
                         src={user?.picture}
-                        alt={user.slug}
+                        alt={user?.slug}
                         className="w-8 h-8 rounded-full"
                       />
                       <span>Profile</span>

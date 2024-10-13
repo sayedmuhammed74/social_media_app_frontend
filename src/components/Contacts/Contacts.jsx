@@ -39,7 +39,7 @@ const Contacts = () => {
       <div className="flex justify-between">
         <h2 className="text-gray-400">Online</h2>
         <span className=" rounded-full text-white bg-primary py-1 px-2.5">
-          {friends?.length}
+          {onlineFriends?.length}
         </span>
       </div>
       <ul>

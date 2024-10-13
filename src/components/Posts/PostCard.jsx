@@ -41,7 +41,7 @@ const PostCard = ({ post }) => {
   // see if post liked by loged user
   useEffect(() => {
     const filteredLikes = post?.likes?.filter(
-      (like) => like?.user._id === user?._id
+      (like) => like?.user?._id === user?._id
     );
     setIsLiked(filteredLikes);
   }, [post, user]);

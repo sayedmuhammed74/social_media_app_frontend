@@ -6,8 +6,8 @@ const Likes = ({ likes }) => {
         {likes?.slice(0, 3).map((like) => (
           <img
             key={like?._id}
-            src={like?.user.picture}
-            alt={like?.user.firstname}
+            src={like?.user?.picture}
+            alt={like?.user?.firstname}
             className="rounded-full w-5 h-5"
           />
         ))}
