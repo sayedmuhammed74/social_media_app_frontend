@@ -2,12 +2,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 // Actions
-import { fetchRequests } from '../../redux/features/requestsSlice';
+import { fetchRequests } from '../../redux/features/requests/requestThunks';
 // Components
 import RequestCard from './RequestCard';
 import Loading from '../Loading';
 
 const Requests = () => {
+  // Redux
   const dispatch = useDispatch();
   const { requests, status } = useSelector((state) => state.requests);
 

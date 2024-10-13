@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import postsReducer from './features/postsSlice';
-import requestsReducer from './features/requestsSlice';
-import friendsReducer from './features/friendsSlice';
-import storiesReducer from './features/storiesSlice';
-import userReducer from './features/userSlice';
+import postsReducer from './features/posts/postSlice';
+import requestsReducer from './features/requests/requestSlice';
+import friendsReducer from './features/friends/friendSlice';
+import storiesReducer from './features/stories/storySlice';
+import userReducer from './features/user/userSlice';
+import socketReducer from './features/socket/socketSlice';
+import chatsReducer from './features/chats/chatSlice';
 const store = configureStore({
   reducer: {
     posts: postsReducer,
@@ -11,7 +13,13 @@ const store = configureStore({
     friends: friendsReducer,
     stories: storiesReducer,
     user: userReducer,
+    socket: socketReducer,
+    chats: chatsReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // Disable the check
+    }),
 });
 
 export default store;

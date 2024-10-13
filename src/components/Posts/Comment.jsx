@@ -2,30 +2,37 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // Icons
-import { faEllipsis, faHeart } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEllipsis,
+  faHeart,
+  faPlay,
+  faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Utils
 import axios from 'axios';
-import { url } from '../../url';
 import Cookies from 'js-cookie';
+import { url } from '../../url';
 // Actions
-import { deleteComment, editCommment } from '../../redux/features/postsSlice';
+import {
+  deleteComment,
+  editCommment,
+} from '../../redux/features/posts/postSlice';
+import { deleteAPIData, updateAPIData } from '../../utils/APIFunctions';
 
 const Comment = ({ comment, postId }) => {
-  const { user } = useSelector((state) => state.user);
+  // Redux
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  // States
   const [commentOptionsList, setCommentOptionsList] = useState(false);
   const [commentEditInput, setCommentEditInput] = useState(false);
   const [editInput, setEditInput] = useState(comment?.content);
+  const [isLoading, setIsLoading] = useState(false);
 
   //   Delete Comment
   const handleDeleteComment = (commentId) => {
-    axios
-      .delete(`${url}/api/v1/posts/${postId}/comments/${commentId}`, {
-        headers: {
-          authorization: `Bearer ${Cookies.get('jwt')}`,
-        },
-      })
+    deleteAPIData(`/api/v1/posts/${postId}/comments/${commentId}`)
       .then(() => dispatch(deleteComment({ postId, commentId })))
       .catch((err) => console.log(err))
       .finally(() => setCommentOptionsList(false));
@@ -33,23 +40,20 @@ const Comment = ({ comment, postId }) => {
 
   // Edit Comment
   const handleEditComment = () => {
-    axios
-      .patch(
-        `${url}/api/v1/posts/${postId}/comments/${comment?._id}`,
-        { content: editInput },
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get('jwt')}`,
-          },
-        }
-      )
+    setIsLoading(true);
+    updateAPIData(`${url}/api/v1/posts/${postId}/comments/${comment?._id}`, {
+      content: editInput,
+    })
       .then(() =>
         dispatch(
           editCommment({ postId, commentId: comment?._id, content: editInput })
         )
       )
       .catch((err) => console.log(err))
-      .finally(() => setCommentEditInput(false));
+      .finally(() => {
+        setCommentEditInput(false);
+        setIsLoading(false);
+      });
   };
 
   //   Handle Edit Icon Click
@@ -71,38 +75,32 @@ const Comment = ({ comment, postId }) => {
       {!commentEditInput && (
         <>
           <span>{comment?.content}</span>
-          <FontAwesomeIcon
-            icon={faHeart}
-            className="text-gray-400"
-            // style={{ color: '#74C0FC' }}
-          />
+          <FontAwesomeIcon icon={faHeart} className="text-gray-400" />
           <FontAwesomeIcon
             icon={faEllipsis}
             className="cursor-pointer hover:opacity-50"
             onClick={() => setCommentOptionsList((prev) => !prev)}
           />
-          <ul
-            className={`${
-              commentOptionsList ? 'flex' : 'hidden'
-            } absolute z-10 w-fit right-3 top-7 flex-col gap-1 rounded-sm rounded-b-lg shadow-sm divide-x bg-gray-100 select-none`}
-          >
-            {user?._id === comment?.user?._id && (
-              <>
-                <li
-                  onClick={() => handleDeleteComment(comment?._id)}
-                  className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-                >
-                  Delete Comment
-                </li>
-                <li
-                  onClick={handleEditIconClick}
-                  className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
-                >
-                  Edit Comment
-                </li>
-              </>
-            )}
-          </ul>
+          {user?._id === comment?.user?._id && (
+            <ul
+              className={`${
+                commentOptionsList ? 'flex' : 'hidden'
+              } absolute z-10 w-fit right-3 top-7 flex-col gap-1 rounded-sm rounded-b-lg shadow-sm divide-x bg-gray-100 select-none`}
+            >
+              <li
+                onClick={() => handleDeleteComment(comment?._id)}
+                className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
+              >
+                Delete Comment
+              </li>
+              <li
+                onClick={handleEditIconClick}
+                className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
+              >
+                Edit Comment
+              </li>
+            </ul>
+          )}
           <span>{comment?.likes?.length ? comment?.likes?.length : ''}</span>
         </>
       )}
@@ -110,16 +108,23 @@ const Comment = ({ comment, postId }) => {
         <>
           <input
             type="text"
+            name="comment"
             value={editInput}
             onChange={(e) => setEditInput(e.target.value)}
-            className="px-1 py-[1px] rounded-md"
+            className="px-1 py-[1px] rounded-md flex-1"
           />
-          <button
-            onClick={handleEditComment}
-            className="px-1 py-[2px] text-sm rounded-md bg-blue-400 text-white"
-          >
-            update
-          </button>
+          {!isLoading ? (
+            <FontAwesomeIcon
+              icon={faPlay}
+              onClick={handleEditComment}
+              className="absolute right-3 top-2 px-1 py-[2px] text-base rounded-md cursor-pointer text-gray-400 hover:opacity-70 transition-opacity duration-75"
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faSpinner}
+              className="absolute right-3 top-2 px-1 py-[2px] text-base rounded-md cursor-none text-gray-400"
+            />
+          )}
         </>
       )}
     </li>

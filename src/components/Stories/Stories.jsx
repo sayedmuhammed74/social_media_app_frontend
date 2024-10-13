@@ -1,21 +1,27 @@
 // Components
 import Story from './StoryCard';
-
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Toaster } from 'react-hot-toast';
 // Hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
-import { createStory, fetchStories } from '../../redux/features/storiesSlice';
+// Actions
+import {
+  createStory,
+  fetchStories,
+} from '../../redux/features/stories/storyThunks';
 
 const Stories = () => {
-  const { stories, error } = useSelector((state) => state.stories);
+  // Redux
   const dispatch = useDispatch();
+  const { stories, error } = useSelector((state) => state.stories);
+
+  // States
   const [image, setImage] = useState('');
   const [text, setText] = useState('');
   const addStoryBox = useRef(null);
+
   const handleAddStoryBox = () => {
     addStoryBox.current.classList.remove('hidden');
     addStoryBox.current.classList.add('flex');
@@ -33,13 +39,14 @@ const Stories = () => {
     }
   };
 
+  // Fetch Stories
   useEffect(() => {
     dispatch(fetchStories());
+    return () => {};
   }, [dispatch]);
 
   return (
     <>
-      <Toaster />
       <div
         className="gap-4 items-center justify-center flex-col absolute z-50 h-[350px] w-[400px] p-3 bg-white shadow rounded-md opacity-70 hidden"
         ref={addStoryBox}

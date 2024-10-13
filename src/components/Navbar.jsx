@@ -3,49 +3,39 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 // Actions
-import { logout } from './../redux/features/userSlice';
+import { logout } from './../redux/features/user/userSlice';
 // Icons
 import logo from './../assets/imgs/logo.svg';
 import searchIcon from './../assets/imgs/icons/magnifying-glass-solid.svg';
 import DropListIcon from './../assets/imgs/icons/list-ul-solid.svg';
-// Utils
-import Cookies from 'js-cookie';
-import { url } from './../url';
-import { resetPosts } from '../redux/features/postsSlice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell } from '@fortawesome/free-regular-svg-icons';
+// Components
+import Notifications from './Notifications';
+import { getAPIData } from '../utils/APIFunctions';
 
 const Navbar = () => {
-  const { user } = useSelector((state) => state.user);
+  // Redux
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  // States
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState([]);
-  const searchListComponent = useRef(null);
-  const dropList = useRef(null);
   const [showDropList, setShowDropList] = useState(false);
+
+  // Refs
+  const dropList = useRef(null);
+  const searchListComponent = useRef(null);
+
   const handleLogout = () => {
     dispatch(logout());
-    dispatch(resetPosts());
     navigate('/login');
   };
 
   useEffect(() => {
-    const fetchSearch = async () => {
-      const token = `Bearer ${Cookies.get('jwt')}`;
-      const res = await fetch(`${url}/api/v1/users?name=${search}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'Application/json',
-          authorization: token,
-        },
-      });
-      const json = await res.json();
-      setUsers(json.data.users);
-    };
-    if (search) {
-      fetchSearch();
-    }
+    search &&
+      getAPIData(`/api/v1/users?name=${search}`)
+        .then((res) => setUsers(res.data.users))
+        .catch((err) => console.log(err));
     return () => {};
   }, [search]);
 
@@ -117,13 +107,7 @@ const Navbar = () => {
                 {searchResults()}
               </div>
             )}
-            <div className="relative flex items-center">
-              <FontAwesomeIcon
-                icon={faBell}
-                className=" cursor-pointer hover:opacity-70 font-bold text-2xl text-blue-400"
-              />
-              <span className="absolute -top-2.5 -right-2 text-red-500">2</span>
-            </div>
+            <Notifications />
             {/* DropList */}
             {user && (
               <>
@@ -157,6 +141,9 @@ const Navbar = () => {
                   </li>
                   <li onClick={() => setShowDropList(false)}>Home</li>
                   <li onClick={() => setShowDropList(false)}>Friends</li>
+                  <li onClick={() => setShowDropList(false)}>
+                    <Link to="/messenger">Messenger</Link>
+                  </li>
                   <li onClick={() => setShowDropList(false)}>
                     <button onClick={handleLogout}>Logout</button>
                   </li>

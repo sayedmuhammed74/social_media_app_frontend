@@ -1,56 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
 import Cookies from 'js-cookie';
-import { url } from '../../url';
-
-// Login
-export const login = createAsyncThunk(
-  'user/login',
-  async ({ email, password }) => {
-    const res = await fetch(`${url}/api/v1/users/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'Application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
-
-    const json = await res.json();
-
-    if (!res.ok) {
-      throw new Error(json.message);
-    }
-
-    // set token to cookies
-    Cookies.set('jwt', json.token);
-
-    // set user to local storage
-    localStorage.setItem('user', JSON.stringify(json.data.user));
-    return json;
-  }
-);
-
-// Signup
-export const signup = createAsyncThunk('user/signup', async (formData) => {
-  const res = await fetch(`${url}/api/v1/users/signup`, {
-    method: 'POST',
-    body: formData,
-  });
-
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.message);
-  }
-
-  // set token to cookies
-  Cookies.set('jwt', json.token);
-  // set user to local storage
-  localStorage.setItem('user', JSON.stringify(json.data.user));
-  return json;
-});
+import { login, signup } from './userThunks';
 
 // check if user exist in local host
 const user = localStorage.getItem('user')

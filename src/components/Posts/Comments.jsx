@@ -2,17 +2,19 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // Utils
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { url } from '../../url';
 // Components
 import Comment from './Comment';
 // Actions
-import { addComment } from '../../redux/features/postsSlice';
+import { addComment } from '../../redux/features/posts/postSlice';
+import { postAPIData } from '../../utils/APIFunctions';
 
 const Comments = ({ showComments, post, setShowComments }) => {
-  const { user } = useSelector((state) => state.user);
+  // Redux
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  // States
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [inputComment, setInputComment] = useState('');
 
@@ -20,18 +22,9 @@ const Comments = ({ showComments, post, setShowComments }) => {
   const handleAddComment = (e) => {
     if (e.key === 'Enter' && inputComment && !isSubmitting) {
       setIsSubmitting(true);
-      axios
-        .post(
-          `${url}/api/v1/posts/${post?._id}/comments`,
-          {
-            content: inputComment,
-          },
-          {
-            headers: {
-              authorization: `Bearer ${Cookies.get('jwt')}`,
-            },
-          }
-        )
+      postAPIData(`${url}/api/v1/posts/${post?._id}/comments`, {
+        content: inputComment,
+      })
         .then((res) => {
           let comment = res.data.data.comment;
           comment.user = user;

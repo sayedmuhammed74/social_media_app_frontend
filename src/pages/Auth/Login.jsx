@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 // reducers
-import { login } from './../../redux/features/userSlice';
+import { login } from './../../redux/features/user/userThunks';
 // Packages
 const Login = () => {
   const [email, setEmail] = useState('');

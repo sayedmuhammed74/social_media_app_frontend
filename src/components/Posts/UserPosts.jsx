@@ -1,27 +1,28 @@
 // components
 import PostCard from './PostCard';
 import AddPost from './AddPost';
+import Loading from '../Loading';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-// reducres
-import { fetchPosts } from '../../redux/features/posts/postThunks';
-import Loading from '../Loading';
+// Actions
+import { fetchUserPosts } from '../../redux/features/posts/postThunks';
 
-const Posts = () => {
+const UserPosts = ({ userId }) => {
   // Redux
   const dispatch = useDispatch();
-  const { posts, totalPages, status } = useSelector((state) => state.posts);
+  const { user } = useSelector((state) => state.user);
+  const { userPosts, totalPages, status } = useSelector((state) => state.posts);
   // States
   const [page, setPage] = useState(1);
 
   // Fetch Posts
   useEffect(() => {
     if (page === 1 || page <= totalPages) {
-      dispatch(fetchPosts({ page }));
+      dispatch(fetchUserPosts({ userId, page }));
       return () => {};
     }
-  }, [dispatch, page, totalPages]);
+  }, [dispatch, userId, page, totalPages]);
 
   // Infinite scroll effect
   useEffect(() => {
@@ -41,19 +42,19 @@ const Posts = () => {
   return (
     <section>
       {/* Add New Post */}
-      <AddPost />
+      {userId === user._id && <AddPost />}
       {/* Posts */}
       <div>
-        {posts?.map((post) => (
-          <PostCard post={post} key={post._id} />
+        {userPosts?.map((post, index) => (
+          <PostCard post={post} key={`${post?._id}-${index}`} />
         ))}
       </div>
       <Loading status={status} />
-      {posts?.length === 0 && status !== 'loading' && (
+      {userPosts?.length === 0 && status !== 'loading' && (
         <div className="text-center text-gray-400 text-sm">no posts</div>
       )}
     </section>
   );
 };
 
-export default Posts;
+export default UserPosts;

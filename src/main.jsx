@@ -20,6 +20,7 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import UserPage from './pages/UserPage.jsx';
 import Layout from './pages/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Messenger from './pages/Messenger.jsx';
 // import isAuthenticated from './utils/isAuthenticated.js';
 
 const router = createBrowserRouter([
@@ -57,6 +58,16 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <Layout>
           <UserPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/messenger',
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <Messenger />
         </Layout>
       </ProtectedRoute>
     ),

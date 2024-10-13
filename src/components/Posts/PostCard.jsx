@@ -22,17 +22,21 @@ import {
   deletePost,
   dislikePost,
   likePost,
-} from '../../redux/features/postsSlice';
+} from '../../redux/features/posts/postSlice';
 import { Link } from 'react-router-dom';
+import { deleteAPIData, postAPIData } from '../../utils/APIFunctions';
 
 const PostCard = ({ post }) => {
+  // Redux
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  // States
   const [showMoreText, setShowMoreText] = useState(false);
   const [postOptionsList, setPostOptionsList] = useState(false);
-  const toggleText = () => setShowMoreText(!showMoreText);
-  const dispatch = useDispatch();
   const [showComments, setShowComments] = useState(false);
   const [isLiked, setIsLiked] = useState([]);
-  const { user } = useSelector((state) => state.user);
+  const toggleText = () => setShowMoreText(!showMoreText);
 
   // see if post liked by loged user
   useEffect(() => {
@@ -44,12 +48,7 @@ const PostCard = ({ post }) => {
 
   // Likes
   const dislike = (likeId) => {
-    axios
-      .delete(`${url}/api/v1/posts/${post?._id}/likes/${likeId}`, {
-        headers: {
-          authorization: `Bearer ${Cookies.get('jwt')}`,
-        },
-      })
+    deleteAPIData(`${url}/api/v1/posts/${post?._id}/likes/${likeId}`)
       .then(() => {
         setIsLiked([]);
         dispatch(dislikePost({ likeId, postId: post?._id }));
@@ -58,12 +57,7 @@ const PostCard = ({ post }) => {
   };
 
   const addLike = () => {
-    axios
-      .post(`${url}/api/v1/posts/${post?._id}/likes`, undefined, {
-        headers: {
-          authorization: `Bearer ${Cookies.get('jwt')}`,
-        },
-      })
+    postAPIData(`${url}/api/v1/posts/${post?._id}/likes`, undefined)
       .then((res) => {
         setIsLiked([res.data.data.like]);
         let like = res.data.data.like;
@@ -75,7 +69,7 @@ const PostCard = ({ post }) => {
 
   const handleLikeBtn = () => {
     if (isLiked?.length === 1) {
-      dislike(isLiked[0]._id);
+      dislike(isLiked[0]?._id);
     } else {
       addLike();
     }
@@ -105,10 +99,10 @@ const PostCard = ({ post }) => {
         <div className="flex gap-2">
           <img
             src={post?.user?.picture} // Assuming profilePicture is the property for user's profile picture
-            className="rounded-md"
+            alt={post?.user?.firstname}
             width={30}
             height={30}
-            alt=""
+            className="rounded-md"
           />
           <div className="flex flex-col items-stretch">
             <Link to={`/users/${post?.user?.slug}`}>
@@ -191,7 +185,7 @@ const PostCard = ({ post }) => {
             <FontAwesomeIcon
               icon={faHeart}
               className={`${
-                isLiked.length === 1 ? 'text-[#74C0FC]' : 'text-gray-400'
+                isLiked?.length === 1 ? 'text-[#74C0FC]' : 'text-gray-400'
               } cursor-pointer hover:opacity-80`}
               onClick={handleLikeBtn}
             />

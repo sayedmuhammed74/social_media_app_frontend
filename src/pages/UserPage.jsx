@@ -1,6 +1,5 @@
 import { faShare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Posts from './../components/Posts/Posts';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
@@ -11,7 +10,8 @@ import {
   acceptRequest,
   cancelRequest,
   createRequest,
-} from '../redux/features/requestsSlice';
+} from '../redux/features/requests/requestThunks';
+import UserPosts from '../components/Posts/UserPosts';
 
 const ProfilePage = () => {
   const { slug } = useParams();
@@ -174,7 +174,7 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="container w-[90%] mt-5 mx-auto p-5 shadow-md rounded-md bg-white">
-          <Posts userId={user?._id} />
+          <UserPosts userId={user?._id} />
         </div>
       </section>
     </>

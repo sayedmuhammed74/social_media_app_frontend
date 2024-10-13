@@ -1,8 +1,9 @@
 // Hooks
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signup } from './../../redux/features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+// Actions
+import { signup } from './../../redux/features/user/userThunks';
 
 const Register = () => {
   const navigate = useNavigate();

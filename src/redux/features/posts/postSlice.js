@@ -1,63 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import { url } from '../../url';
-
-const FETCH_POSTS = 'posts/fetchPosts';
-const CREATE_POST = 'posts/createPost';
-
-export const fetchPosts = createAsyncThunk(
-  FETCH_POSTS,
-  async ({ userId, page }) => {
-    const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(
-      `${url}/api/v1/posts?userId=${userId}&page=${page}`,
-      {
-        method: 'GET',
-        // credentials: 'include',
-        headers: {
-          'Content-Type': 'Application/json',
-          authorization: token,
-        },
-      }
-    );
-    // Catch Error
-    if (!res.ok) {
-      const json = await res.json();
-      throw new Error(json.message);
-    }
-    const json = await res.json();
-    return json;
-  }
-);
-
-export const createPost = createAsyncThunk(
-  CREATE_POST,
-  async ({ description, media }) => {
-    const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(`${url}/api/v1/posts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'Application/json',
-        authorization: token,
-      },
-      body: JSON.stringify({
-        description,
-        media,
-      }),
-    });
-
-    // Catch Error
-    if (!res.ok) {
-      const json = await res.json();
-      throw new Error(json.message);
-    }
-    const json = await res.json();
-    return json;
-  }
-);
-
+import { createSlice } from '@reduxjs/toolkit';
+import { createPost, fetchPosts, fetchUserPosts } from './postThunks';
 const initialState = {
   posts: [],
+  userPosts: [],
   status: 'idle',
   error: null,
   totalPosts: 0,
@@ -77,7 +22,8 @@ const postsSlice = createSlice({
       state.posts = filteredPosts;
     },
     resetPosts: (state) => {
-      state.posts = initialState.error;
+      state.posts = initialState.posts;
+      state.userPosts = initialState.userPosts;
       state.status = initialState.status;
       state.error = initialState.error;
       state.totalPosts = initialState.totalPosts;
@@ -144,22 +90,35 @@ const postsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        // state.status = 'success';
-        // if (state.totalPosts === action.payload.totalPosts) {
-        //   state.posts.push(...action.payload.data.posts);
-        // } else {
-        //   state.posts = action.payload.data.posts;
-        // }
-        state.totalPosts = action.payload.totalPosts;
-        state.totalPages = action.payload.totalPages;
         if (action.payload.currentPage === 1) {
           state.posts = action.payload.data.posts;
-        } else {
+        } else if (action.payload.currentPage <= action.payload.totalPages) {
           state.posts.push(...action.payload.data.posts);
         }
+        state.totalPosts = action.payload.totalPosts;
+        state.totalPages = action.payload.totalPages;
         state.status = 'success';
       })
       .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+
+      // Fetch User Posts
+      .addCase(fetchUserPosts.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUserPosts.fulfilled, (state, action) => {
+        if (action.payload.currentPage === 1) {
+          state.userPosts = action.payload.data.posts;
+        } else {
+          state.userPosts.push(...action.payload.data.posts);
+        }
+        state.totalPosts = action.payload.totalPosts;
+        state.totalPages = action.payload.totalPages;
+        state.status = 'success';
+      })
+      .addCase(fetchUserPosts.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
@@ -170,7 +129,7 @@ const postsSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.status = 'success';
-        state.posts.push(action.payload.data.post);
+        state.posts = [action.payload.data.post, ...state.posts];
       })
       .addCase(createPost.rejected, (state, action) => {
         state.status = 'failed';
