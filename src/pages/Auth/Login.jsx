@@ -25,6 +25,8 @@ const Login = () => {
     }
   }, [status, navigate]);
 
+  useEffect(() => console.log(error), [error]);
+
   return (
     <section className="flex flex-col container px-5 py-6 my-12 min-h-[80vh] overflow-hidden rounded-3xl mx-auto max-w-[80vw] bg-gray-200">
       <h1 className="text-3xl font-bold text-center mb-2 text-primary">

@@ -32,12 +32,12 @@ const userSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.user = action.payload.data.user;
+        state.user = action.payload;
         state.status = 'success';
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       // Signup builders
       .addCase(signup.pending, (state) => {
@@ -49,7 +49,7 @@ const userSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });
