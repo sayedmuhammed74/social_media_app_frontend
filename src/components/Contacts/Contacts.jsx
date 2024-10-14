@@ -50,7 +50,11 @@ const Contacts = () => {
         ))}
       </ul>
       <Loading status={status} />
-      {friends?.length === 0 && status !== 'loading' ? 'no contacts' : ''}
+      {onlineFriends?.length === 0 && status !== 'loading' ? (
+        <div className="text-center text-gray-400">no contacts</div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };

@@ -21,18 +21,15 @@ const Navbar = () => {
   const [users, setUsers] = useState([]);
   const [showDropList, setShowDropList] = useState(false);
   const navigate = useNavigate();
-  // const [loading, setLoading] = useState(false)
+
   // Refs
   const dropList = useRef(null);
   const searchListComponent = useRef(null);
 
   const handleLogout = () => {
     dispatch(logout());
-    setTimeout(() => navigate('/login'), 0);
+    setTimeout(() => navigate('/login'), 2500);
   };
-  // setTimeout(() => {
-  //   navigate('/login');
-  // }, 3000);
 
   useEffect(() => {
     search &&

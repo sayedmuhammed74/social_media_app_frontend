@@ -6,10 +6,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login } from './../../redux/features/user/userThunks';
 // Packages
 const Login = () => {
+  // Redux
+  const dispatch = useDispatch();
+  const { error, status } = useSelector((state) => state.user);
+  // States
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { error, status } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
