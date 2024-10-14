@@ -130,7 +130,7 @@ const Chat = ({ chatId, messenger }) => {
       </div>
 
       {/* chat */}
-      <div className="md:h-[65vh] flex flex-col px-5 gap-1 py-2 w-full overflow-y-auto scrollbar">
+      <div className="h-[65vh] flex flex-col px-5 gap-1 py-2 w-full overflow-y-auto scrollbar">
         {conversation?.length === 0 && (
           <div className="h-full flex justify-center items-center bg-blue-50">
             <span className="text-lg text-gray-400">no chat</span>

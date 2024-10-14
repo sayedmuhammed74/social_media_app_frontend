@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../components/Navbar';
 // Utils
 import { io } from 'socket.io-client';
-import { url } from './url';
+import { url } from './../url';
 // Actions
-import { setSocket } from './redux/features/socket/socketSlice';
+import { setSocket } from './../redux/features/socket/socketSlice';
 const Layout = ({ children }) => {
   // Redux
   const dispatch = useDispatch();
