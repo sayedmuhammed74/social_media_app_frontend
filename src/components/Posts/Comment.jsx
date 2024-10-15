@@ -9,8 +9,6 @@ import {
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// Utils
-import { url } from '../../url';
 // Actions
 import {
   deleteComment,
@@ -29,9 +27,9 @@ const Comment = ({ comment, postId }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   //   Delete Comment
-  const handleDeleteComment = (commentId) => {
-    deleteAPIData(`/api/v1/posts/${postId}/comments/${commentId}`)
-      .then(() => dispatch(deleteComment({ postId, commentId })))
+  const handleDeleteComment = () => {
+    deleteAPIData(`/api/v1/posts/${postId}/comments/${comment?._id}`)
+      .then(() => dispatch(deleteComment({ postId, commentId: comment?._id })))
       .catch((err) => console.log(err))
       .finally(() => setCommentOptionsList(false));
   };
@@ -39,7 +37,7 @@ const Comment = ({ comment, postId }) => {
   // Edit Comment
   const handleEditComment = () => {
     setIsLoading(true);
-    updateAPIData(`${url}/api/v1/posts/${postId}/comments/${comment?._id}`, {
+    updateAPIData(`/api/v1/posts/${postId}/comments/${comment?._id}`, {
       content: editInput,
     })
       .then(() =>
@@ -87,7 +85,7 @@ const Comment = ({ comment, postId }) => {
               } absolute z-10 w-fit right-3 top-7 flex-col gap-1 rounded-sm rounded-b-lg shadow-sm divide-x bg-gray-100 select-none`}
             >
               <li
-                onClick={() => handleDeleteComment(comment?._id)}
+                onClick={handleDeleteComment}
                 className="py-1.5 px-2 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
               >
                 Delete Comment

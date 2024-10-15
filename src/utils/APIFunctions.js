@@ -59,8 +59,12 @@ export const deleteAPIData = async (api) => {
         authorization: `Bearer ${Cookies.get('jwt')}`,
       },
     });
-    const data = await res.json();
-    return data;
+    if (!res.ok) {
+      const data = await res.json();
+      console.log(data);
+      throw new Error(data.message);
+    }
+    return;
   } catch (err) {
     throw new Error(err);
   }

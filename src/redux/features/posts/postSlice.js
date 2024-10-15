@@ -52,9 +52,8 @@ const postsSlice = createSlice({
     },
     // Comment
     addComment: (state, action) => {
-      const postId = action.payload.postId; // Assuming the payload contains the post ID
-      const comment = action.payload.comment; // Assuming the payload contains the comment data
-      const post = state.posts.find((post) => post?.id === postId);
+      const comment = action.payload; // Assuming the payload contains the comment data
+      const post = state.posts.find((post) => post?.id === comment.post);
       if (post) {
         post.comments.push(comment); // Add the comment to the post's comments
       }
@@ -62,7 +61,7 @@ const postsSlice = createSlice({
     deleteComment: (state, action) => {
       const postId = action.payload.postId; // Assuming the payload contains the post ID
       const commentId = action.payload.commentId; // Assuming the payload contains the comment data
-      const post = state.posts.find((post) => post?.id === postId);
+      const post = state.posts.find((post) => post._id === postId);
       if (post) {
         post.comments = post.comments.filter(
           (comment) => comment._id !== commentId
@@ -70,10 +69,8 @@ const postsSlice = createSlice({
       }
     },
     editCommment: (state, action) => {
-      const postId = action.payload.postId; // Assuming the payload contains the post ID
-      const commentId = action.payload.commentId; // Assuming the payload contains the comment data
-      const content = action.payload.content; // Assuming the payload contains the comment data
-      const post = state.posts.find((post) => post?.id === postId);
+      const { postId, commentId, content } = action.payload;
+      const post = state.posts.find((post) => post._id === postId);
       if (post) {
         post.comments = post.comments.map((comment) => {
           if (comment._id === commentId) {

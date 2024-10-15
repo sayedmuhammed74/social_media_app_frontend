@@ -1,8 +1,6 @@
 // Hooks
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-// Utils
-import { url } from '../../url';
+import { useDispatch } from 'react-redux';
 // Components
 import Comment from './Comment';
 // Actions
@@ -12,7 +10,6 @@ import { postAPIData } from '../../utils/APIFunctions';
 const Comments = ({ showComments, post, setShowComments }) => {
   // Redux
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
 
   // States
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,13 +19,11 @@ const Comments = ({ showComments, post, setShowComments }) => {
   const handleAddComment = (e) => {
     if (e.key === 'Enter' && inputComment && !isSubmitting) {
       setIsSubmitting(true);
-      postAPIData(`${url}/api/v1/posts/${post?._id}/comments`, {
+      postAPIData(`/api/v1/posts/${post?._id}/comments`, {
         content: inputComment,
       })
         .then((res) => {
-          let comment = res.data.data.comment;
-          comment.user = user;
-          dispatch(addComment({ comment, postId: post?.id }));
+          dispatch(addComment(res.data.comment));
           setInputComment('');
         })
         .catch((err) => console.log(err))
