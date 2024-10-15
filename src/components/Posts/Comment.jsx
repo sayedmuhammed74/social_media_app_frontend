@@ -10,8 +10,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Utils
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { url } from '../../url';
 // Actions
 import {
@@ -68,8 +66,9 @@ const Comment = ({ comment, postId }) => {
       key={comment?._id}
     >
       <img
-        alt=""
+        alt={comment?.user?.firstname}
         src={comment?.user?.picture}
+        loading="lazy"
         className="w-6 h-6 rounded-full"
       />
       {!commentEditInput && (

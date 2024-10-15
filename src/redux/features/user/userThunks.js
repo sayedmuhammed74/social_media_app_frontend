@@ -1,10 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { postAPIData } from './../../../utils/APIFunctions';
 import { url } from '../../../url';
 import Cookies from 'js-cookie';
-import { postAPIData } from './../../../utils/APIFunctions';
+
+const LOGIN = 'user/login';
+const SIGNUP = 'user/signup';
+
 // Login
 export const login = createAsyncThunk(
-  'user/login',
+  LOGIN,
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const res = await postAPIData('/api/v1/users/login', { email, password });
@@ -19,37 +23,12 @@ export const login = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.message || 'Login failed');
     }
-
-    // try {
-    //   const res = await fetch(`${url}/api/v1/users/login`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ email, password }),
-    //   });
-
-    //   if (!res.ok) {
-    //     const json = await res.json();
-    //     // Pass the message from the response
-    //     return rejectWithValue(json.message || 'Login failed');
-    //   }
-    //   const json = await res.json();
-
-    //   // Set token and user info
-    //   Cookies.set('jwt', json.token);
-    //   localStorage.setItem('user', JSON.stringify(json.data.user));
-
-    //   return json; // Return the user data on success
-    // } catch (err) {
-    //   return rejectWithValue('An unexpected error occurred.');
-    // }
   }
 );
 
 // Signup
 export const signup = createAsyncThunk(
-  'user/signup',
+  SIGNUP,
   async (formData, { rejectWithValue }) => {
     try {
       const res = await fetch(`${url}/api/v1/users/signup`, {
@@ -60,7 +39,7 @@ export const signup = createAsyncThunk(
       if (!res.ok) {
         const json = await res.json();
         // Pass the message from the response
-        return rejectWithValue(json.message || 'Login failed');
+        return rejectWithValue(json.message || 'Sign up failed');
       }
       const json = await res.json();
 

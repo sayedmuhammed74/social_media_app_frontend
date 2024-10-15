@@ -1,13 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createStory, fetchStories } from './storyThunks';
 
+// Initial State
+const initialState = {
+  stories: [],
+  status: 'idle',
+  error: null,
+};
+
 const storiesSlice = createSlice({
   name: 'stories',
-  initialState: {
-    stories: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -17,11 +20,11 @@ const storiesSlice = createSlice({
       })
       .addCase(fetchStories.fulfilled, (state, action) => {
         state.status = 'success';
-        state.stories = action.payload.data.stories;
+        state.stories = action.payload;
       })
       .addCase(fetchStories.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Create Story
@@ -30,11 +33,11 @@ const storiesSlice = createSlice({
       })
       .addCase(createStory.fulfilled, (state, action) => {
         state.status = 'success';
-        state.stories.unshift(action.payload.data.story);
+        state.stories.unshift(action.payload);
       })
       .addCase(createStory.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });

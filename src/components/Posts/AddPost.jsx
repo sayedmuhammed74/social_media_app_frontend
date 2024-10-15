@@ -21,28 +21,27 @@ const AddPost = () => {
   };
 
   return (
-    <>
-      <form
-        onSubmit={handleCreatePost}
-        className="flex justify-between p-5 bg-white"
-      >
-        <div className="flex gap-2">
-          <img
-            src={user?.picture}
-            alt={user?.firstname}
-            width={40}
-            height={40}
-            className="rounded-md"
-          />
-          <input
-            type="text"
-            name="post"
-            placeholder="What's New ?"
-            className="text-lg font-light focus:outline-none text-slate-300 focus:text-slate-900"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          {/* <input
+    <form
+      onSubmit={handleCreatePost}
+      className="flex justify-between p-5 bg-white"
+    >
+      <div className="flex gap-2">
+        <img
+          src={user?.picture}
+          alt={user?.firstname}
+          width={40}
+          height={40}
+          className="rounded-md"
+        />
+        <input
+          type="text"
+          name="post"
+          placeholder="What's New ?"
+          className="text-lg font-light focus:outline-none text-slate-300 focus:text-slate-900"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        {/* <input
             type="file"
             name="media"
             placeholder=""
@@ -50,16 +49,14 @@ const AddPost = () => {
             value={media[0]}
             onChange={(e) => setMedia([e.target.files[0]])}
           /> */}
-        </div>
-        <button
-          className="px-3 h-8 rounded-md cursor-pointer hover:opacity-80 text-white bg-primary"
-          type="submit"
-        >
-          {/* <FontAwesomeIcon icon={faPaperclip} /> */}
-          share
-        </button>
-      </form>
-    </>
+      </div>
+      <button
+        className="px-3 h-8 rounded-md cursor-pointer hover:opacity-80 text-white bg-primary"
+        type="submit"
+      >
+        share
+      </button>
+    </form>
   );
 };
 

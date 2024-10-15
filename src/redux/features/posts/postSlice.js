@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createPost, fetchPosts, fetchUserPosts } from './postThunks';
+import {
+  createPost,
+  fetchPosts,
+  fetchUserPosts,
+  updatePost,
+} from './postThunks';
+
+// Initial State
 const initialState = {
   posts: [],
   userPosts: [],
@@ -9,6 +16,7 @@ const initialState = {
   totalPages: 0,
 };
 
+// Pst Slice
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
@@ -19,15 +27,11 @@ const postsSlice = createSlice({
       const filteredPosts = state.posts.filter(
         (post) => post?.id !== action.payload
       );
+      const filteredUsersPosts = state.userPosts.filter(
+        (post) => post?.id !== action.payload
+      );
       state.posts = filteredPosts;
-    },
-    resetPosts: (state) => {
-      state.posts = initialState.posts;
-      state.userPosts = initialState.userPosts;
-      state.status = initialState.status;
-      state.error = initialState.error;
-      state.totalPosts = initialState.totalPosts;
-      state.totalPages = initialState.totalPages;
+      state.userPosts = filteredUsersPosts;
     },
     // Like
     likePost: (state, action) => {
@@ -101,7 +105,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Fetch User Posts
@@ -120,7 +124,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchUserPosts.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Create Post
@@ -129,11 +133,35 @@ const postsSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.status = 'success';
-        state.posts = [action.payload.data.post, ...state.posts];
+        state.posts = [action.payload, ...state.posts];
+        state.userPosts = [action.payload, ...state.userPosts];
       })
       .addCase(createPost.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
+      })
+
+      // Create Post
+      .addCase(updatePost.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.status = 'success';
+        const userPostIndex = state.userPosts.findIndex(
+          (post) => post._id === action.payload._id
+        );
+        state.userPosts[userPostIndex] = action.payload;
+        const postIndex = state.posts.findIndex(
+          (post) => post._id === action.payload._id
+        );
+        if (postIndex !== -1) {
+          state.posts[postIndex] = action.payload;
+        }
+        // state.posts[index] = action.payload;
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
@@ -141,7 +169,6 @@ const postsSlice = createSlice({
 export const {
   editPost,
   deletePost,
-  resetPosts,
   likePost,
   dislikePost,
   addComment,

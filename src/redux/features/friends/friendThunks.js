@@ -1,25 +1,20 @@
-import Cookies from 'js-cookie';
-import { url } from './../../../url';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getAPIData } from './../../../utils/APIFunctions';
 
 const FETCH_FRIENDS = 'friends/fetchFriends';
 
-export const fetchFriends = createAsyncThunk(FETCH_FRIENDS, async () => {
-  try {
-    const token = `Bearer ${Cookies.get('jwt')}`;
-    const res = await fetch(`${url}/api/v1/users/friends`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'Application/json',
-        authorization: token,
-      },
-    });
-    const json = await res.json();
-    // console.log(json);
-    return json;
-  } catch (err) {
-    console.log(err);
-
-    // return rejectWithValue(err.response?.data.message || err.message);
+export const fetchFriends = createAsyncThunk(
+  FETCH_FRIENDS,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getAPIData('/api/v1/users/friends');
+      if (res.status === 'success') {
+        return res.data.friends;
+      } else {
+        return rejectWithValue(res.message || 'Failed to fetch friends');
+      }
+    } catch (err) {
+      return rejectWithValue(err.message || 'Failed to fetch friends');
+    }
   }
-});
+);

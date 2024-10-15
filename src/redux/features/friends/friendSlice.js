@@ -1,14 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchFriends } from './friendThunks';
 
+// Initial State
+const initialState = {
+  friends: [],
+  onlineFriends: [],
+  status: 'idle',
+  error: null,
+};
+
+// Frieds Slice
 const friendsSlice = createSlice({
   name: 'friends',
-  initialState: {
-    friends: [],
-    onlineFriends: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
     setOnlineFriends: (state, action) => {
       state.onlineFriends = action.payload;
@@ -25,15 +29,14 @@ const friendsSlice = createSlice({
       })
       .addCase(fetchFriends.fulfilled, (state, action) => {
         state.status = 'success';
-        state.friends = action.payload.data?.friends;
+        state.friends = action.payload;
       })
       .addCase(fetchFriends.rejected, (state, action) => {
-        console.log('failed');
-        console.log(action.error);
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });
+
 export const { addFriend, setOnlineFriends } = friendsSlice.actions;
 export default friendsSlice.reducer;

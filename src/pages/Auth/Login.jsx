@@ -1,9 +1,11 @@
 // Hooks
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 // reducers
 import { login } from './../../redux/features/user/userThunks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-regular-svg-icons';
 // Packages
 const Login = () => {
   // Redux
@@ -13,6 +15,17 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  // Refs
+  const passwordRef = useRef(null);
+
+  const handleShowPassword = () => {
+    if (passwordRef.current.type === 'password') {
+      passwordRef.current.type = 'text';
+    } else {
+      passwordRef.current.type = 'password';
+    }
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -48,14 +61,22 @@ const Login = () => {
           name="email"
           className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
         />
-        <input
-          type="password"
-          className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
-          name="password"
-        />
+        <div className="relative">
+          <input
+            ref={passwordRef}
+            type="password"
+            className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none select-none"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="password"
+            name="password"
+          />
+          <FontAwesomeIcon
+            icon={faEye}
+            onClick={handleShowPassword}
+            className="absolute right-2 top-4 text-gray-600 hover:opacity-80 cursor-pointer select-none"
+          />
+        </div>
         <button
           type="submit"
           className="flex bg-gray-500 px-3 py-1.5 justify-center rounded-md text-white font-medium"

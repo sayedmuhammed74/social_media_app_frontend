@@ -1,49 +1,37 @@
-import Cookies from 'js-cookie';
-import { url } from '../../../url';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { postAPIData, getAPIData } from './../../../utils/APIFunctions';
+
+const FETCH_STORIES = 'stories/fetchStories';
+const CREATE_STORY = 'stories/createStory';
 
 export const fetchStories = createAsyncThunk(
-  'stories/fetchStories',
-  async () => {
+  FETCH_STORIES,
+  async (_, { rejectWithValue }) => {
     try {
-      const token = `Bearer ${Cookies.get('jwt')}`;
-      const res = await fetch(`${url}/api/v1/users/stories`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'Application/json',
-          authorization: token,
-        },
-      });
-      const json = await res.json();
-      return json;
+      const res = await getAPIData('/api/v1/users/stories');
+      if (res.status === 'success') {
+        return res.data.stories;
+      } else {
+        return rejectWithValue(res.message || 'Failed to fetch stories');
+      }
     } catch (err) {
-      console.log(err);
-      throw new Error(err);
+      return rejectWithValue(err.message || 'Failed to fetch stories');
     }
   }
 );
 
 export const createStory = createAsyncThunk(
-  'stories/createStory',
-  async ({ image, text }) => {
+  CREATE_STORY,
+  async ({ image, text }, { rejectWithValue }) => {
     try {
-      const token = `Bearer ${Cookies.get('jwt')}`;
-      const res = await fetch(`${url}/api/v1/users/stories`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'Application/json',
-          authorization: token,
-        },
-        body: JSON.stringify({
-          image,
-          text,
-        }),
-      });
-      const json = await res.json();
-      return json;
+      const res = await postAPIData('/api/v1/users/stories', { image, text });
+      if (res.status === 'success') {
+        return res.data.story;
+      } else {
+        return rejectWithValue(res.message || 'Failed to create story');
+      }
     } catch (err) {
-      console.log(err);
-      throw new Error(err);
+      return rejectWithValue(err.message || 'Failed to create story');
     }
   }
 );

@@ -6,13 +6,17 @@ import {
   fetchRequests,
 } from './requestThunks';
 
+// Initial State
+const initialState = {
+  requests: [],
+  status: 'idle',
+  error: null,
+};
+
+// Request Slice
 const requestsSlice = createSlice({
   name: 'requests',
-  initialState: {
-    requests: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -22,11 +26,11 @@ const requestsSlice = createSlice({
       })
       .addCase(fetchRequests.fulfilled, (state, action) => {
         state.status = 'success';
-        state.requests = action.payload.data.requests;
+        state.requests = action.payload;
       })
       .addCase(fetchRequests.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Create Request
@@ -38,7 +42,7 @@ const requestsSlice = createSlice({
       })
       .addCase(createRequest.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Accept Request
@@ -48,13 +52,13 @@ const requestsSlice = createSlice({
       .addCase(acceptRequest.fulfilled, (state, action) => {
         state.status = 'success';
         let filteredRequests = state.requests.filter(
-          (request) => request._id !== action.payload.data.request._id
+          (request) => request._id !== action.payload._id
         );
         state.requests = filteredRequests;
       })
       .addCase(acceptRequest.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Cancel Friend Request
@@ -71,7 +75,7 @@ const requestsSlice = createSlice({
       })
       .addCase(cancelRequest.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });

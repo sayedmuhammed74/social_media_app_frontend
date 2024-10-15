@@ -8,14 +8,17 @@ const user = localStorage.getItem('user')
   ? JSON.parse(localStorage.getItem('user'))
   : null;
 
+// Initial State
+const initialState = {
+  user,
+  status: 'idle',
+  error: null,
+};
+
 // User Slice
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    user,
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
     logout: (state) => {
       Cookies.remove('jwt');

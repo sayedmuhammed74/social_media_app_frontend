@@ -25,6 +25,7 @@ import {
 } from '../../redux/features/posts/postSlice';
 import { Link } from 'react-router-dom';
 import { deleteAPIData, postAPIData } from '../../utils/APIFunctions';
+import UpdateCard from './updateCard';
 
 const PostCard = ({ post }) => {
   // Redux
@@ -37,7 +38,7 @@ const PostCard = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const [isLiked, setIsLiked] = useState([]);
   const toggleText = () => setShowMoreText(!showMoreText);
-
+  const [update, setUpdate] = useState(false);
   // see if post liked by loged user
   useEffect(() => {
     const filteredLikes = post?.likes?.filter(
@@ -88,14 +89,20 @@ const PostCard = ({ post }) => {
       .finally(() => setPostOptionsList(false));
   };
 
+  // update Post
+  const showUpdatePost = () => {
+    setPostOptionsList(false);
+    setUpdate(true);
+  };
+
   return (
     <div
       className={`p-5 shadow-md flex flex-col rounded-sm my-5 ${
         post?.media?.length > 0 ? 'h-[600px] max-h-[600px]' : ''
       } bg-white`}
     >
-      {/* user info & time ago */}
       <div className="flex p-3 justify-between relative">
+        {/* user info & time ago */}
         <div className="flex gap-2">
           <img
             src={post?.user?.picture} // Assuming profilePicture is the property for user's profile picture
@@ -103,6 +110,7 @@ const PostCard = ({ post }) => {
             width={30}
             height={30}
             className="rounded-md"
+            loading="lazy"
           />
           <div className="flex flex-col items-stretch">
             <Link to={`/users/${post?.user?.slug}`}>
@@ -134,7 +142,7 @@ const PostCard = ({ post }) => {
                 Delete Post
               </li>
               <li
-                onClick={() => setPostOptionsList(false)}
+                onClick={showUpdatePost}
                 className="py-1.5 px-5 text-sm text-gray-600 cursor-pointer hover:bg-gray-300 hover:text-white"
               >
                 Edit Post
@@ -152,28 +160,37 @@ const PostCard = ({ post }) => {
         </ul>
       </div>
 
-      {/* post text */}
-      <div className="px-3 overflow-hidden my-5">
-        <p className={showMoreText ? '' : 'line-clamp-3'}>
-          {post?.description}
-        </p>
-        {post?.description?.length > 100 && (
-          <span className="text-blue-500 cursor-pointer" onClick={toggleText}>
-            {showMoreText ? ' Show less' : ' Read more'}
-          </span>
-        )}
-      </div>
+      {!update && (
+        <>
+          {/* post text */}
+          <div className="px-3 overflow-hidden my-5">
+            <p className={showMoreText ? '' : 'line-clamp-3'}>
+              {post?.description}
+            </p>
+            {post?.description?.length > 100 && (
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={toggleText}
+              >
+                {showMoreText ? ' Show less' : ' Read more'}
+              </span>
+            )}
+          </div>
 
-      {/* post media */}
-      {post?.media?.length > 0 && (
-        <div className="flex flex-1 justify-center my-2 h-[200px]">
-          <img
-            src={post?.media[0]}
-            alt=""
-            className="object-contain aspect-square rounded-sm"
-          />
-        </div>
+          {/* post media */}
+          {post?.media?.length > 0 && (
+            <div className="flex flex-1 justify-center my-2 h-[200px]">
+              <img
+                src={post?.media[0]}
+                alt=""
+                className="object-contain aspect-square rounded-sm"
+              />
+            </div>
+          )}
+        </>
       )}
+
+      {update && <UpdateCard post={post} setUpdate={setUpdate} />}
 
       <div>
         {/* Likes */}

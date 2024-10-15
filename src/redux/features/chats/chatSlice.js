@@ -1,13 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchChats } from './chatThunks';
 
+// Initial State
+const initialState = {
+  chats: [],
+  status: 'idle',
+  error: null,
+};
+
+// Chat Slice
 const chatsSlice = createSlice({
   name: 'chat',
-  initialState: {
-    chats: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
     setLastMesage: (state, action) => {
       const chatId = action.payload.chatId;
@@ -30,26 +34,12 @@ const chatsSlice = createSlice({
       })
       .addCase(fetchChats.fulfilled, (state, action) => {
         state.status = 'success';
-        state.chats = action.payload.data.conversations;
+        state.chats = action.payload;
       })
       .addCase(fetchChats.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       });
-
-    // Send Message
-    // .addCase(sendMessage.pending, (state) => {
-    //   state.status = 'loading';
-    // })
-    // .addCase(sendMessage.fulfilled, (state, action) => {
-    //   state.status = 'success';
-    //   state.chat.messages.push(action.payload.data.message);
-    //   state.chat.lastMessage = action.payload.data.message;
-    // })
-    // .addCase(sendMessage.rejected, (state, action) => {
-    //   state.status = 'failed';
-    //   state.error = action.error.message;
-    // });
   },
 });
 
