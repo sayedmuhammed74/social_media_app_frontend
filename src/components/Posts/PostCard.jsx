@@ -49,7 +49,7 @@ const PostCard = ({ post }) => {
 
   // Likes
   const dislike = (likeId) => {
-    deleteAPIData(`${url}/api/v1/posts/${post?._id}/likes/${likeId}`)
+    deleteAPIData(`/api/v1/posts/${post?._id}/likes/${likeId}`)
       .then(() => {
         setIsLiked([]);
         dispatch(dislikePost({ likeId, postId: post?._id }));
@@ -58,12 +58,10 @@ const PostCard = ({ post }) => {
   };
 
   const addLike = () => {
-    postAPIData(`${url}/api/v1/posts/${post?._id}/likes`, undefined)
+    postAPIData(`/api/v1/posts/${post?._id}/likes`, undefined)
       .then((res) => {
-        setIsLiked([res.data.data.like]);
-        let like = res.data.data.like;
-        like.user = user;
-        dispatch(likePost({ like, postId: post?._id }));
+        setIsLiked([res.data.like]);
+        dispatch(likePost({ like: res.data.like, postId: post?._id }));
       })
       .catch((err) => console.log(err));
   };

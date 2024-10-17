@@ -43,13 +43,11 @@ export const signup = createAsyncThunk(
       }
       const json = await res.json();
 
-      // set token to cookies
+      // set user Info
       Cookies.set('jwt', json.token);
-
-      // set user to local storage
       localStorage.setItem('user', JSON.stringify(json.data.user));
 
-      return json;
+      return json.data.user;
     } catch (err) {
       return rejectWithValue('An unexpected error occurred.');
     }

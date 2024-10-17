@@ -21,8 +21,7 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    // Post
-    editPost: () => {},
+    // Delete Post
     deletePost: (state, action) => {
       const filteredPosts = state.posts.filter(
         (post) => post?.id !== action.payload
@@ -35,19 +34,29 @@ const postsSlice = createSlice({
     },
     // Like
     likePost: (state, action) => {
-      const postId = action.payload.postId; // Assuming the payload contains the post ID
-      const like = action.payload.like; // Assuming the payload contains the like data
-      const post = state.posts.find((post) => post?.id === postId);
+      const { postId, like } = action.payload;
+      const post = state.posts.find((post) => post?._id === postId);
       if (post) {
         post.likes.push(like); // Add the like to the post's likes
       }
+      const userPost = state.userPosts.find((post) => post?._id === postId);
+      if (userPost) {
+        userPost.likes.push(like); // Add the like to the post's likes
+      }
     },
     dislikePost: (state, action) => {
-      const postId = action.payload.postId; // Assuming the payload contains the post ID
-      const likeId = action.payload.likeId; // Assuming the payload contains the like data
-      const post = state.posts.find((post) => post?.id === postId);
-      if (post) {
-        post.likes = post.likes.filter((like) => like._id !== likeId); // Add the like to the post's likes
+      const { postId, likeId } = action.payload; // Assuming the payload contains the post ID
+      const postIndex = state.posts.findIndex((post) => post?.id === postId);
+      if (postIndex !== -1) {
+        const post = state.posts[postIndex];
+        post.likes = post.likes.filter((like) => like._id !== likeId);
+      }
+      const userPostIndex = state.userPosts.findIndex(
+        (post) => post?.id === postId
+      );
+      if (userPostIndex !== -1) {
+        const post = state.userPosts[userPostIndex];
+        post.likes = post.likes.filter((like) => like._id !== likeId);
       }
     },
     // Comment
@@ -56,6 +65,12 @@ const postsSlice = createSlice({
       const post = state.posts.find((post) => post?.id === comment.post);
       if (post) {
         post.comments.push(comment); // Add the comment to the post's comments
+      }
+      const userPost = state.userPosts.find(
+        (post) => post?.id === comment.post
+      );
+      if (userPost) {
+        userPost.comments.push(comment); // Add the comment to the post's comments
       }
     },
     deleteComment: (state, action) => {
@@ -67,12 +82,30 @@ const postsSlice = createSlice({
           (comment) => comment._id !== commentId
         ); // Add the comment to the post's comments
       }
+      const userPost = state.userPosts.find((post) => post._id === postId);
+      if (userPost) {
+        userPost.comments = userPost.comments.filter(
+          (comment) => comment._id !== commentId
+        ); // Add the comment to the post's comments
+      }
     },
     editCommment: (state, action) => {
       const { postId, commentId, content } = action.payload;
       const post = state.posts.find((post) => post._id === postId);
       if (post) {
         post.comments = post.comments.map((comment) => {
+          if (comment._id === commentId) {
+            return {
+              ...comment, // Spread existing comment properties
+              content: content, // Update the content
+            };
+          }
+          return comment; // Return original comment if no match
+        }); // Add the comment to the post's comments
+      }
+      const userPost = state.userPosts.find((post) => post._id === postId);
+      if (userPost) {
+        userPost.comments = userPost.comments.map((comment) => {
           if (comment._id === commentId) {
             return {
               ...comment, // Spread existing comment properties
@@ -172,4 +205,5 @@ export const {
   editCommment,
   deleteComment,
 } = postsSlice.actions;
+
 export default postsSlice.reducer;

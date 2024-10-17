@@ -1,62 +1,54 @@
-import { faShare } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// Icons
+// import { faShare } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// Hooks
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import { url } from './../url';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
+// Utils
+import { url } from './../url';
+import { getAPIData } from '../utils/APIFunctions';
+// Actions
 import {
   acceptRequest,
   cancelRequest,
   createRequest,
 } from '../redux/features/requests/requestThunks';
+// Components
 import UserPosts from '../components/Posts/UserPosts';
 
 const ProfilePage = () => {
-  const { slug } = useParams();
   const dispatch = useDispatch();
+  const { slug } = useParams();
   const [showBtn, setShowBtn] = useState(false);
   const [user, setUser] = useState(undefined);
   const [request, setRequest] = useState({});
 
   // Fetch User
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = `Bearer ${Cookies.get('jwt')}`;
-        const res = await fetch(`${url}/api/v1/users/${slug}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'Application/json',
-            authorization: token,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP error ${res.status}`);
-        }
-
-        const json = await res.json();
-        setUser(json?.data.user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    slug && fetchUser();
+    slug &&
+      getAPIData(`/api/v1/users/${slug}`)
+        .then((res) => setUser(res.data.user))
+        .catch((err) => console.log(err));
     return () => {};
   }, [slug]);
 
   useEffect(() => {
-    if (!user) return;
-    axios
-      .get(`${url}/api/v1/users/requests/${user?._id}`, {
-        headers: { authorization: `Bearer ${Cookies.get('jwt')}` },
-      })
-      .then((res) => setRequest(res.data.data.request))
-      .catch((err) => console.log(err));
+    user &&
+      getAPIData(`/api/v1/users/requests/${user?._id}`)
+        .then((res) => setRequest(res.data.request))
+        .catch((err) => console.log(err));
     return () => {};
   }, [user]);
+
+  const handleAddFriend = () => {
+    dispatch(createRequest({ reciever: user?._id }));
+    setTimeout(() => {
+      getAPIData(`/api/v1/users/requests/${user?._id}`)
+        .then((res) => setRequest(res.data.request))
+        .catch((err) => console.log(err));
+    }, 1000);
+  };
 
   const handleUnfriend = () => {
     dispatch(cancelRequest({ id: request?._id }));
@@ -64,24 +56,9 @@ const ProfilePage = () => {
     setRequest({});
   };
 
-  const handleAddFriend = () => {
-    dispatch(createRequest({ reciever: user?._id }));
-    axios
-      .get(`${url}/api/v1/users/requests/${user?._id}`, {
-        headers: { authorization: `Bearer ${Cookies.get('jwt')}` },
-      })
-      .then((res) => setRequest(res.data.data.request))
-      .catch((err) => console.log(err));
-  };
-
   const handleAcceptRequest = () => {
     dispatch(acceptRequest({ id: request?._id }));
-    axios
-      .get(`${url}/api/v1/users/requests/${user?._id}`, {
-        headers: { authorization: `Bearer ${Cookies.get('jwt')}` },
-      })
-      .then((res) => setRequest(res.data.data.request))
-      .catch((err) => console.log(err));
+    setRequest((prev) => ({ ...prev, status: 'accepted' }));
   };
 
   return (
@@ -114,6 +91,7 @@ const ProfilePage = () => {
               <span className="ml-2">@{user?.slug}</span>
               <span className="ml-2">{user?.bio}</span>
               <div className="flex flex-col sm:flex-row gap-3 my-2 font-medium text-lg">
+                {/* Friends Already */}
                 {request?.status === 'accepted' && (
                   <div className="relative flex flex-col divide-y">
                     <button
@@ -122,6 +100,7 @@ const ProfilePage = () => {
                     >
                       Friends
                     </button>
+                    {/* unfriend */}
                     <button
                       onClick={handleUnfriend}
                       className={`w-[65%] sm:w-auto ${
@@ -132,6 +111,7 @@ const ProfilePage = () => {
                     </button>
                   </div>
                 )}
+                {/* Add Friend */}
                 {!request?.status && (
                   <button
                     className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
@@ -140,7 +120,8 @@ const ProfilePage = () => {
                     Add Friend
                   </button>
                 )}
-                {request?.status === 'pending' && request?.to === user?.id && (
+                {/* Cancel Request from another*/}
+                {request?.status === 'pending' && request?.to === user?._id && (
                   <button
                     className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
                     onClick={handleUnfriend}
@@ -148,8 +129,9 @@ const ProfilePage = () => {
                     Cancel
                   </button>
                 )}
+                {/* Accept Request */}
                 {request?.status === 'pending' &&
-                  request?.from === user?.id && (
+                  request?.from === user?._id && (
                     <button
                       className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800"
                       onClick={handleAcceptRequest}
@@ -157,6 +139,7 @@ const ProfilePage = () => {
                       Accept
                     </button>
                   )}
+
                 <button className="w-[65%] sm:w-auto px-4 py-1 rounded-sm hover:opacity-95 hover:scale-95 transition-all duration-75 bg-gray-400 text-slate-800">
                   Message
                 </button>
@@ -166,7 +149,7 @@ const ProfilePage = () => {
                   }
                   className="w-[65%] sm:w-auto flex justify-center px-2 py-1 rounded-sm items-center gap-2 hover:opacity-95 hover:scale-95 transition-all duration-75 text-white bg-primary"
                 >
-                  <FontAwesomeIcon icon={faShare} style={{ color: 'white' }} />
+                  {/* <FontAwesomeIcon icon={faShare} style={{ color: 'white' }} /> */}
                   Share Profile
                 </button>
               </div>

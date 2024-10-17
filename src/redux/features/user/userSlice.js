@@ -42,12 +42,13 @@ const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+
       // Signup builders
       .addCase(signup.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(signup.fulfilled, (state, action) => {
-        state.user = action.payload.data.user;
+        state.user = action.payload;
         state.status = 'success';
       })
       .addCase(signup.rejected, (state, action) => {

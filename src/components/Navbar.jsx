@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    setTimeout(() => navigate('/login'), 2500);
+    navigate('/login');
   };
 
   useEffect(() => {

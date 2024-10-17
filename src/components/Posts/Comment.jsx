@@ -60,7 +60,9 @@ const Comment = ({ comment, postId }) => {
 
   return (
     <li
-      className="relative flex items-center gap-3 rounded-md w-fit py-1 px-3 bg-gray-200"
+      className={`relative flex items-center gap-3 rounded-md ${
+        commentEditInput ? 'w-full' : 'w-fit'
+      } py-1 px-3 bg-gray-200`}
       key={comment?._id}
     >
       <img
@@ -108,7 +110,8 @@ const Comment = ({ comment, postId }) => {
             name="comment"
             value={editInput}
             onChange={(e) => setEditInput(e.target.value)}
-            className="px-1 py-[1px] rounded-md flex-1"
+            className="px-1 py-[1px] rounded-md flex-1 w-fit"
+            onClick={(e) => e.key === 'Enter' && handleEditComment()}
           />
           {!isLoading ? (
             <FontAwesomeIcon

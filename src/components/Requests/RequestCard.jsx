@@ -6,6 +6,7 @@ import {
   cancelRequest,
 } from '../../redux/features/requests/requestThunks';
 import { addFriend } from '../../redux/features/friends/friendSlice';
+import { Link } from 'react-router-dom';
 
 const RequestCard = ({ request }) => {
   const dispatch = useDispatch();
@@ -30,9 +31,12 @@ const RequestCard = ({ request }) => {
           className="rounded-md"
         />
         <p className="text-slate-500">
-          <span className="font-medium text-light">
+          <Link
+            to={`/users/${request?.from.slug}`}
+            className="font-medium text-light mr-2 hover:opacity-80 cursor-pointer"
+          >
             {request?.from.firstname} {request?.from.lastname}
-          </span>{' '}
+          </Link>
           wants to add you to friends
         </p>
       </div>

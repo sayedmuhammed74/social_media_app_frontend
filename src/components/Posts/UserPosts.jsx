@@ -18,10 +18,12 @@ const UserPosts = ({ userId }) => {
 
   // Fetch Posts
   useEffect(() => {
-    if (page === 1 || page <= totalPages) {
-      dispatch(fetchUserPosts({ userId, page }));
-      return () => {};
+    if (userId) {
+      if (page === 1 || page <= totalPages) {
+        dispatch(fetchUserPosts({ userId, page }));
+      }
     }
+    return () => {};
   }, [dispatch, userId, page, totalPages]);
 
   // Infinite scroll effect
