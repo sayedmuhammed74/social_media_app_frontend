@@ -27,17 +27,23 @@ const Navbar = () => {
   const dropList = useRef(null);
   const searchListComponent = useRef(null);
 
+  // Logout
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
   };
+
+  if (!user) navigate('/login');
 
   useEffect(() => {
     search &&
       getAPIData(`/api/v1/users?name=${search}`)
         .then((res) => setUsers(res.data.users))
         .catch((err) => console.log(err));
-    return () => {};
+    return () => {
+      if (!search) {
+        setUsers([]);
+      }
+    };
   }, [search]);
 
   const searchResults = () => {

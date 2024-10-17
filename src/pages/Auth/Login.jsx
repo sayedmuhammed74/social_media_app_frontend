@@ -10,7 +10,7 @@ import { faEye } from '@fortawesome/free-regular-svg-icons';
 const Login = () => {
   // Redux
   const dispatch = useDispatch();
-  const { error, status } = useSelector((state) => state.user);
+  const { user, error, status } = useSelector((state) => state.user);
 
   // States
   const [email, setEmail] = useState('');
@@ -33,10 +33,9 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
-    setTimeout(() => {
-      status === 'success' && navigate('/');
-    }, 1500);
   };
+
+  if (user) navigate('/');
 
   return (
     <section className="flex justify-center items-center w-full h-[100vh] bg-blue-50">

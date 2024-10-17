@@ -1,5 +1,5 @@
 // Hooks
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // Actions
 import {
   acceptRequest,
@@ -7,13 +7,25 @@ import {
 } from '../../redux/features/requests/requestThunks';
 import { addFriend } from '../../redux/features/friends/friendSlice';
 import { Link } from 'react-router-dom';
+import { addNotification } from '../../utils/APIFunctions';
 
 const RequestCard = ({ request }) => {
+  // Redux
   const dispatch = useDispatch();
+  const { socket } = useSelector((state) => state.socket);
 
+  // Accept Request
   const handleAcceptRequest = () => {
     dispatch(acceptRequest({ id: request?._id }));
     dispatch(addFriend(request?.from));
+    // Add Notification
+    addNotification(
+      request?.from._id,
+      'friend_request',
+      request?._id,
+      'Request',
+      socket
+    );
   };
 
   const handleCancelRequest = () => {

@@ -69,3 +69,25 @@ export const deleteAPIData = async (api) => {
     throw new Error(err);
   }
 };
+
+export const addNotification = (
+  userId,
+  type,
+  referenceId,
+  referenceType,
+  socket
+) => {
+  // Handle Sending Notifications
+  postAPIData('/api/v1/notifications', {
+    userId,
+    type,
+    referenceId,
+    referenceType,
+  })
+    .then((res) =>
+      socket?.emit('handleNotification', {
+        notification: res.data.notification,
+      })
+    )
+    .catch((err) => console.log(err));
+};

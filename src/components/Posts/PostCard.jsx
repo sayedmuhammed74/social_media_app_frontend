@@ -11,21 +11,22 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 // Utils
 import moment from 'moment';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { url } from '../../url';
+import {
+  addNotification,
+  deleteAPIData,
+  postAPIData,
+} from '../../utils/APIFunctions';
+import { Link } from 'react-router-dom';
 // Components
 import Comments from './Comments';
 import Likes from './Likes';
+import UpdateCard from './updateCard';
 // Actions
 import {
   deletePost,
   dislikePost,
   likePost,
 } from '../../redux/features/posts/postSlice';
-import { Link } from 'react-router-dom';
-import { deleteAPIData, postAPIData } from '../../utils/APIFunctions';
-import UpdateCard from './updateCard';
 
 const PostCard = ({ post }) => {
   // Redux
@@ -40,6 +41,7 @@ const PostCard = ({ post }) => {
   const [isLiked, setIsLiked] = useState([]);
   const toggleText = () => setShowMoreText(!showMoreText);
   const [update, setUpdate] = useState(false);
+
   // see if post liked by loged user
   useEffect(() => {
     const filteredLikes = post?.likes?.filter(
@@ -56,6 +58,17 @@ const PostCard = ({ post }) => {
         dispatch(dislikePost({ likeId, postId: post?._id }));
       })
       .catch((err) => console.log(err));
+
+    // Handle delelte prev Notification
+    deleteAPIData(
+      `/api/v1/notifications/notificationId?$userId=${post.user._id}&referenceId=${post._id}&type=like`,
+      {
+        userId: post.user._id,
+        type: 'like',
+        referenceId: post._id,
+        referenceType: 'Post',
+      }
+    ).catch((err) => console.log(err));
   };
 
   const addLike = () => {
@@ -63,21 +76,9 @@ const PostCard = ({ post }) => {
       .then((res) => {
         setIsLiked([res.data.like]);
         dispatch(likePost({ like: res.data.like, postId: post?._id }));
+        // Handle Sending Notifications
+        addNotification(post?.user._id, 'like', post?._id, 'Post', socket);
       })
-      .catch((err) => console.log(err));
-
-    // Handle Sending Notifications
-    postAPIData('/api/v1/notifications', {
-      userId: post.user._id,
-      type: 'like',
-      referenceId: post._id,
-      referenceType: 'Post',
-    })
-      .then((res) =>
-        socket?.emit('handleNotification', {
-          notification: res.data.notification,
-        })
-      )
       .catch((err) => console.log(err));
   };
 
@@ -91,12 +92,7 @@ const PostCard = ({ post }) => {
 
   // Delete Post
   const handleDeletePost = () => {
-    axios
-      .delete(`${url}/api/v1/posts/${post._id}`, {
-        headers: {
-          authorization: `Bearer ${Cookies.get('jwt')}`,
-        },
-      })
+    deleteAPIData(`/api/v1/posts/${post._id}`)
       .then(() => dispatch(deletePost(post?._id)))
       .catch((err) => console.log(err))
       .finally(() => setPostOptionsList(false));

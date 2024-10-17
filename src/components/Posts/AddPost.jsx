@@ -17,6 +17,7 @@ const AddPost = () => {
     e.preventDefault();
     if (media || description) {
       dispatch(createPost({ media, description }));
+      setDescription('');
     }
   };
 

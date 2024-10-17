@@ -16,7 +16,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [bio, setBio] = useState('');
+  // const [bio, setBio] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [warning, setWarning] = useState('');
 
@@ -29,7 +29,7 @@ const Register = () => {
     formData.append('email', email);
     formData.append('password', password);
     formData.append('passwordConfirm', passwordConfirm);
-    formData.append('bio', bio);
+    // formData.append('bio', bio);
     formData.append('birthdate', birthdate);
     formData.append('picture', pictureRef.current.files[0]);
     if (!pictureRef.current.files[0])
@@ -56,16 +56,16 @@ const Register = () => {
 
   return (
     <section className="flex justify-center items-center w-full h-[100vh] bg-blue-50">
-      <div className="flex flex-col px-5 py-6 rounded-3xl mx-auto w-fit bg-white">
+      <div className="px-2 py-3 rounded-3xl mx-auto w-fit bg-white">
         <h1 className="text-3xl font-bold text-center mb-2 text-primary">
           DARK SPACE
         </h1>
         <p className="text-center font-extralight text-sm text-gray-500">
           Dark Sapce Social Media Application
         </p>
-        <span className="text-center text-red-400">{error}</span>
+        <div className="text-center text-red-400">{error}</div>
         <form
-          className="mx-auto mt-3 flex flex-col justify-center gap-3"
+          className="mx-auto px-3 mt-3 flex flex-col justify-center gap-3"
           onSubmit={handleRegister}
         >
           <input
@@ -108,25 +108,23 @@ const Register = () => {
             name="passwordConfirm"
             className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
           />
-          <textarea
+          {/* <textarea
             placeholder="bio"
             name="bio"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none"
-          ></textarea>
-          <div className="flex items-center gap-5">
-            <label htmlFor="picture" className="text-gray-500">
-              Picture
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              ref={pictureRef}
-              name="picture"
-              className="text-gray-500"
-            />
-          </div>
+            className="py-2 px-5 rounded-md text-lg border-b-2 focus:outline-none min-h-11 max-h-16"
+          /> */}
+          <label htmlFor="picture" className="text-gray-500">
+            Picture
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            ref={pictureRef}
+            name="picture"
+            className="text-gray-500 max-w-56"
+          />
           {warning && (
             <span className="text-center text-red-400">{warning}</span>
           )}

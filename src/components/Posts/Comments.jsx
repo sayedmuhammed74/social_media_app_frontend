@@ -1,15 +1,16 @@
 // Hooks
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // Components
 import Comment from './Comment';
 // Actions
 import { addComment } from '../../redux/features/posts/postSlice';
-import { postAPIData } from '../../utils/APIFunctions';
+import { addNotification, postAPIData } from '../../utils/APIFunctions';
 
 const Comments = ({ showComments, post, setShowComments }) => {
   // Redux
   const dispatch = useDispatch();
+  const { socket } = useSelector((state) => state.socket);
 
   // States
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,6 +26,8 @@ const Comments = ({ showComments, post, setShowComments }) => {
         .then((res) => {
           dispatch(addComment(res.data.comment));
           setInputComment('');
+          // Handle Sending Notifications
+          addNotification(post?.user._id, 'comment', post?._id, 'Post', socket);
         })
         .catch((err) => console.log(err))
         .finally(() => setIsSubmitting(false));
