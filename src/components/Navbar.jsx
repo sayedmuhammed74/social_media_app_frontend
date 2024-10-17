@@ -16,6 +16,7 @@ const Navbar = () => {
   // Redux
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+
   // States
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState([]);

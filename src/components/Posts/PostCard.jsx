@@ -30,6 +30,7 @@ import UpdateCard from './updateCard';
 const PostCard = ({ post }) => {
   // Redux
   const dispatch = useDispatch();
+  const { socket } = useSelector((state) => state.socket);
   const { user } = useSelector((state) => state.user);
 
   // States
@@ -63,6 +64,20 @@ const PostCard = ({ post }) => {
         setIsLiked([res.data.like]);
         dispatch(likePost({ like: res.data.like, postId: post?._id }));
       })
+      .catch((err) => console.log(err));
+
+    // Handle Sending Notifications
+    postAPIData('/api/v1/notifications', {
+      userId: post.user._id,
+      type: 'like',
+      referenceId: post._id,
+      referenceType: 'Post',
+    })
+      .then((res) =>
+        socket?.emit('handleNotification', {
+          notification: res.data.notification,
+        })
+      )
       .catch((err) => console.log(err));
   };
 

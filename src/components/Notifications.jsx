@@ -2,18 +2,26 @@ import { faBell, faMessage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getAPIData } from '../utils/APIFunctions';
 
 const Notifications = () => {
   const { socket } = useSelector((state) => state.socket);
   const [notifications, setNotifications] = useState([]);
   const [messages] = useState([]);
 
-  //  Listen to Get Notification
+  // Listening to notifications
   useEffect(() => {
-    socket?.on('getNotification', (data) =>
-      setNotifications((prev) => [...prev, data])
+    socket?.on('sendNotification', (notification) =>
+      setNotifications((prev) => [...prev, notification])
     );
   }, [socket]);
+
+  // Fetch Notifications
+  useEffect(() => {
+    getAPIData('/api/v1/notifications')
+      .then((res) => setNotifications(res.data.notifications))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>
