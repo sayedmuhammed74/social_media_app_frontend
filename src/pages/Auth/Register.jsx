@@ -49,10 +49,10 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (status === 'success') {
+    if (status === 'success' && !error) {
       navigate('/');
     }
-  }, [status, navigate]);
+  }, [status, navigate, error]);
 
   return (
     <section className="flex justify-center items-center w-full h-[100vh] bg-blue-50">

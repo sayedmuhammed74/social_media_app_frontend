@@ -15,7 +15,7 @@ import { getAPIData } from '../utils/APIFunctions';
 const Navbar = () => {
   // Redux
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  const { user, status } = useSelector((state) => state.user);
 
   // States
   const [search, setSearch] = useState('');
@@ -32,7 +32,9 @@ const Navbar = () => {
     dispatch(logout());
   };
 
-  if (!user) navigate('/login');
+  useEffect(() => {
+    status === 'idle' && navigate('/login');
+  }, [status, navigate]);
 
   useEffect(() => {
     search &&

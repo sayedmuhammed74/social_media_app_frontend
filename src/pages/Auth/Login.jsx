@@ -1,5 +1,5 @@
 // Hooks
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 // reducers
@@ -10,7 +10,7 @@ import { faEye } from '@fortawesome/free-regular-svg-icons';
 const Login = () => {
   // Redux
   const dispatch = useDispatch();
-  const { user, error, status } = useSelector((state) => state.user);
+  const { error, status } = useSelector((state) => state.user);
 
   // States
   const [email, setEmail] = useState('');
@@ -35,7 +35,11 @@ const Login = () => {
     dispatch(login({ email, password }));
   };
 
-  if (user) navigate('/');
+  useEffect(() => {
+    if (status === 'success' && !error) {
+      navigate('/');
+    }
+  }, [status, navigate, error]);
 
   return (
     <section className="flex justify-center items-center w-full h-[100vh] bg-blue-50">

@@ -48,8 +48,8 @@ const userSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(signup.fulfilled, (state, action) => {
-        state.user = action.payload;
         state.status = 'success';
+        state.user = action.payload;
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = 'failed';
