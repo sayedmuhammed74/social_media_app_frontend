@@ -65,7 +65,7 @@ const Register = () => {
         </p>
         <span className="text-center text-red-400">{error}</span>
         <form
-          className="mt-3 flex flex-col justify-center gap-3"
+          className="mx-auto mt-3 flex flex-col justify-center gap-3"
           onSubmit={handleRegister}
         >
           <input
