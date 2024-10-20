@@ -13,7 +13,11 @@ import FriendMessage from './FriendMessage';
 // Emojies
 import EmojiPicker from 'emoji-picker-react';
 // Helpers
-import { getAPIData, postAPIData } from '../../utils/APIFunctions';
+import {
+  addNotification,
+  getAPIData,
+  postAPIData,
+} from '../../utils/APIFunctions';
 // Actions
 import { setLastMesage } from './../../redux/features/chats/chatSlice';
 
@@ -65,6 +69,14 @@ const Chat = ({ chatId, messenger }) => {
             to: messenger?._id,
           });
           dispatch(setLastMesage({ chatId, message: res.data.message }));
+          // Handle Sending Notifications
+          addNotification(
+            messenger?._id,
+            'message',
+            res.data.message._id,
+            'Message',
+            socket
+          );
         })
         .catch((err) => console.log(err))
         .finally(() => setMessage(''));

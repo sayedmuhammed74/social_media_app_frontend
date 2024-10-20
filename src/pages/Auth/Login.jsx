@@ -36,10 +36,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (status === 'success' && !error) {
-      navigate('/');
-    }
-  }, [status, navigate, error]);
+    status === 'success' && navigate('/');
+  }, [navigate, status]);
 
   return (
     <section className="flex justify-center items-center w-full h-[100vh] bg-blue-50">

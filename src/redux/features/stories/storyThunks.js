@@ -22,9 +22,9 @@ export const fetchStories = createAsyncThunk(
 
 export const createStory = createAsyncThunk(
   CREATE_STORY,
-  async ({ image, text }, { rejectWithValue }) => {
+  async (form, { rejectWithValue }) => {
     try {
-      const res = await postAPIData('/api/v1/users/stories', { image, text });
+      const res = await postAPIData('/api/v1/users/stories', form);
       if (res.status === 'success') {
         return res.data.story;
       } else {

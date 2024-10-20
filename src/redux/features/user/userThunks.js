@@ -14,7 +14,12 @@ export const login = createAsyncThunk(
       const res = await postAPIData('/api/v1/users/login', { email, password });
       if (res.status === 'success') {
         //   // Set token and user info
-        Cookies.set('jwt', res.token);
+        Cookies.set('jwt', res.token, {
+          expires: 90,
+          path: '/',
+          secure: true,
+          sameSite: 'lax',
+        });
         localStorage.setItem('user', JSON.stringify(res.data.user));
         return res.data.user;
       } else {
@@ -44,7 +49,12 @@ export const signup = createAsyncThunk(
       const json = await res.json();
 
       // set user Info
-      Cookies.set('jwt', json.token);
+      Cookies.set('jwt', json.token, {
+        expires: 90,
+        path: '/',
+        secure: true,
+        sameSite: 'lax',
+      });
       localStorage.setItem('user', JSON.stringify(json.data.user));
 
       return json.data.user;

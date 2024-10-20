@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 // Actions
 import { signup } from './../../redux/features/user/userThunks';
+import { resetError } from '../../redux/features/user/userSlice';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const Register = () => {
 
   return (
     <section className="flex justify-center items-center w-full h-[100vh] bg-blue-50">
-      <div className="px-2 py-3 rounded-3xl mx-auto w-fit bg-white">
+      <div className="px-2 py-3 rounded-3xl mx-auto w-fit max-w-[350px] bg-white">
         <h1 className="text-3xl font-bold text-center mb-2 text-primary">
           DARK SPACE
         </h1>
@@ -152,7 +153,11 @@ const Register = () => {
             <span className="mr-1 text-gray-400">
               I have already an account{' '}
             </span>
-            <Link to="/login" className="font-medium text-blue-400">
+            <Link
+              to="/login"
+              className="font-medium text-blue-400"
+              onClick={() => dispatch(resetError())}
+            >
               Login
             </Link>
           </button>

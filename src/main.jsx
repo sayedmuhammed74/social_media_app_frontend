@@ -21,6 +21,7 @@ import UserPage from './pages/UserPage.jsx';
 import Layout from './pages/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Messenger from './pages/Messenger.jsx';
+import PostPage from './components/Posts/PostPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,16 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <Layout>
           <Messenger />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/posts/:postId',
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <PostPage />
         </Layout>
       </ProtectedRoute>
     ),

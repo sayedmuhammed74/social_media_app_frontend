@@ -24,7 +24,7 @@ const AddPost = () => {
   return (
     <form
       onSubmit={handleCreatePost}
-      className="flex justify-between p-5 bg-white"
+      className="flex justify-between items-center p-5 rounded-md bg-white"
     >
       <div className="flex gap-2">
         <img

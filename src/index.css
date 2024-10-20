@@ -37,3 +37,7 @@ input:focus {
   /* scrollbar-color: #6b7280 #f1f5f9; Thumb and track color */
   scrollbar-color: #60a5fa #f1f5f9; /* Thumb and track color */
 }
+
+FontAwesomeIcon {
+  @apply select-none;
+}

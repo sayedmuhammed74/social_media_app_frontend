@@ -1,43 +1,27 @@
 // Components
 import Story from './StoryCard';
+import CreateStory from './CreateStory';
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 // Hooks
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 // Actions
-import {
-  createStory,
-  fetchStories,
-} from '../../redux/features/stories/storyThunks';
+import { fetchStories } from '../../redux/features/stories/storyThunks';
+// Swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+// import 'swiper/swiper-bundle.min.css';
+import 'swiper/swiper-bundle.css';
 
 const Stories = () => {
   // Redux
   const dispatch = useDispatch();
-  const { stories, error } = useSelector((state) => state.stories);
+  const { stories } = useSelector((state) => state.stories);
+  const { user } = useSelector((state) => state.user);
 
   // States
-  const [image, setImage] = useState('');
-  const [text, setText] = useState('');
-  const addStoryBox = useRef(null);
-
-  const handleAddStoryBox = () => {
-    addStoryBox.current.classList.remove('hidden');
-    addStoryBox.current.classList.add('flex');
-  };
-
-  const handleAddStory = () => {
-    if (image || text) {
-      dispatch(createStory({ image, text }));
-      setTimeout(() => {
-        if (!error) {
-          addStoryBox.current.classList.add('hidden');
-          addStoryBox.current.classList.remove('flex');
-        }
-      }, 500);
-    }
-  };
+  const [showStoryPage, setShowStoryPage] = useState(false);
 
   // Fetch Stories
   useEffect(() => {
@@ -47,53 +31,59 @@ const Stories = () => {
 
   return (
     <>
-      <div
-        className="gap-4 items-center justify-center flex-col absolute z-50 h-[350px] w-[400px] p-3 bg-white shadow rounded-md opacity-70 hidden"
-        ref={addStoryBox}
-      >
-        <div>
-          <input
-            className="p-2 shadow focus:outline-none bg-gray-100"
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        </div>
-        <div className="flex gap-2 justify-center items-center">
-          <input
-            type="file"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-        </div>
-        <button
-          onClick={handleAddStory}
-          className="px-3 py-2 rounded-sm font-medium text-white bg-primary"
-        >
-          Add Story
-        </button>
-      </div>
-      <div className="text-sm flex justify-start gap-3 overflow-hidden py-3 shadow-md rounded-md mb-3 border-r-8 border-l-8 border-white bg-white">
-        {/* Add Story */}
-        <div className="relative overflow-hidden rounded-md h-[140px] min-w-[90px]">
-          <img
-            className="w-full h-full absolute top-0 left-0 hover:scale-105 transition-all"
-            src="./imgs/story-cover.jpg"
-            alt=""
-          />
-          <FontAwesomeIcon
-            icon={faPlus}
-            className=" absolute bottom-7 left-8 border-2 p-1 opacity-90 hover:opacity-75 cursor-pointer rounded-full border-primary text-primary bg-white"
-            onClick={handleAddStoryBox}
-          />
-          <span className="absolute bottom-1.5 left-4 text-center z-10 font-light text-white">
-            Add Story
-          </span>
-        </div>
+      {showStoryPage && <CreateStory setShowStoryPage={setShowStoryPage} />}
+
+      <div className="text-sm flex gap-3 h-[180px] overflow-hidden py-3 shadow-md rounded-md mb-3 border-r-8 border-l-8 border-white bg-white">
         {/* Stories */}
-        {stories.map((story) => (
-          <Story key={story._id} story={story} />
-        ))}
+        <Swiper
+          spaceBetween={3}
+          slidesPerView={6} // Adjust how many stories are visible
+          grabCursor={true} // Change cursor to grab
+          breakpoints={{
+            0: {
+              slidesPerView: 4, // Show 3 slides on smaller screens
+              spaceBetween: 10, // Less space between slides for smaller screens
+            },
+            640: {
+              slidesPerView: 5, // Show 3 slides on smaller screens
+              spaceBetween: 10, // Less space between slides for smaller screens
+            },
+            768: {
+              slidesPerView: 6, // Adjust to show 4 slides on tablets
+              spaceBetween: 6, // Same space as default
+            },
+            1024: {
+              slidesPerView: 6,
+              spaceBetween: 6,
+            },
+          }}
+          className="w-full"
+        >
+          {/* Add Story Part */}
+          <SwiperSlide>
+            <div className="relative overflow-hidden rounded-md w-full h-full bg-gray-500">
+              <img
+                className="w-full h-4/5 absolute top-0 left-0 hover:scale-105 transition-all"
+                src={user?.picture}
+                alt=""
+              />
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="absolute top-[75%] left-[50%] translate-x-[-50%] translate-y-[-50%] border-2 p-1 opacity-90 hover:opacity-75 cursor-pointer rounded-full border-primary text-primary bg-white"
+                onClick={() => setShowStoryPage(true)}
+              />
+              <div className="w-full absolute bottom-1.5 text-center z-10 font-light text-white">
+                Add Story
+              </div>
+            </div>
+          </SwiperSlide>
+
+          {stories.map((story) => (
+            <SwiperSlide key={story._id} className="overflow-hidden rounded-md">
+              <Story story={story} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </>
   );

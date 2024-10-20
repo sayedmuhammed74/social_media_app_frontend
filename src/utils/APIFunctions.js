@@ -16,7 +16,7 @@ export const getAPIData = async (api) => {
   }
 };
 
-export const postAPIData = async (api, body) => {
+export const postAPIData = async (api, form) => {
   try {
     const res = await fetch(url + api, {
       method: 'POST',
@@ -24,7 +24,7 @@ export const postAPIData = async (api, body) => {
         'Content-Type': 'application/json',
         authorization: `Bearer ${Cookies.get('jwt')}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(form),
     });
     const data = await res.json();
     return data;

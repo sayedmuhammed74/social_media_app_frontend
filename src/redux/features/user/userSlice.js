@@ -27,6 +27,9 @@ const userSlice = createSlice({
       state.status = 'idle';
       state.error = null;
     },
+    resetError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -58,5 +61,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, resetError } = userSlice.actions;
 export default userSlice.reducer;
